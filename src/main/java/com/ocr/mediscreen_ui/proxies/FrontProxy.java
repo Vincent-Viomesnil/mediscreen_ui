@@ -1,5 +1,6 @@
 package com.ocr.mediscreen_ui.proxies;
 
+import com.ocr.mediscreen_ui.model.Patient;
 import com.ocr.mediscreen_ui.model.PatientHistory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @FeignClient(name = "mediscreen-assess", url = "localhost:8080")
 public interface FrontProxy {
@@ -25,14 +27,23 @@ public interface FrontProxy {
     @PutMapping(value = "/PatHistory/update/{lastname}")
     PatientHistory updatePatient(@PathVariable String lastname, @RequestBody PatientHistory patientToUpdate);
 
-    @DeleteMapping(value= "/PatHistory/delete/{lastname}")
-    PatientHistory deletePatient(@PathVariable String lastname);
+//    @DeleteMapping(value= "/PatHistory/delete/{lastname}")
+//    PatientHistory deletePatient(@PathVariable String lastname);
+    @GetMapping(value = "/PatHistory/id/{patId}")
+    PatientHistory getPatientByPatId(@PathVariable Long patId);
+        @RequestMapping(value="/Patients", method = RequestMethod.GET)
+    List<Patient> getPatientList();
 
+    @GetMapping(value = "Patient/{lastname}")
+    Optional<Patient> getPatientByLastname(@Valid @PathVariable("lastname") String lastname);
 
+    @PostMapping(value = "/Patient/add")
+    public ResponseEntity<Object> addPatient(@RequestBody Patient patientHistory);
 
-//    @GetMapping(value = "/PatHistory/{firstname}")
-//    Optional<PatientHistory> getPatientByFirstname(String firstname);
+    @PutMapping(value = "/Patient/update/{lastname}")
+    Patient updatePatient(@PathVariable String lastname, @RequestBody Patient patientToUpdate);
 
-//    @GetMapping(value = "assess/{firstname}")
-//    Optional<PatientHistory> getPatientByFirstname(@Valid @RequestParam("firstname") String firstname);
+//    @DeleteMapping(value= "/Patient/delete/{lastname}")
+//    Patient deletePatient(@PathVariable String lastname);
+
 }
