@@ -30,9 +30,9 @@
 
     <div class="row">
 
-        <div th:each="patient : ${patientList}" class="col-md-4 my-1">
+        <div th:each="patient : ${uniquePatientList}" class="col-md-4 my-1">
 
-            <a th:href="@{|/Assess/id/${patient.id}|}" >
+            <a th:href="@{|/PatHistory/id/${patient.id}|}" >
 
                 <p th:text= "${patient.lastname}"></p>
 
