@@ -49,10 +49,7 @@ public class FrontController {
     }
 
 
-    //    @GetMapping(value = "Assess/id/{patId}")
-//    String getAssessmentById(@Valid @PathVariable Long patId) {
-//        return frontProxy.getAssessmentById(patId);
-//    }
+
     @GetMapping(value = "/PatHistory/id/{patId}")
     public String getPatientHistoryById(@PathVariable Long patId, Model model) {
         PatientHistory patientNotes = frontProxy.getPatientByPatId(patId);
@@ -60,11 +57,6 @@ public class FrontController {
         model.addAttribute("patientNotes", patientNotes);
         return "SheetPatient";
     }
-
-//    @RequestMapping(value="/PatHistoryList", method = RequestMethod.GET)
-//    public List<PatientHistory> patientHistoryList() {
-//        return frontProxy.patientHistoryList();
-//    }
 
 
     @RequestMapping(value = "Assess", method = RequestMethod.GET)
