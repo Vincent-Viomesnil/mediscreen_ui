@@ -24,29 +24,73 @@
 
 
 
-    <h1>Application Mediscreen</h1>
+    <h1>Application Mediscreen - Home </h1>
 
 
 
+<!--    <div class="row">-->
+
+<!--            <form action="#" th:action="@{/PatHistory}" method="get" class="form-horizontal" style="width: 100%">-->
+<!--                <div class="form-group">-->
+<!--                    <label for="patId" class="col-sm-2 control-label">Patient id</label>-->
+<!--                    <div class="col-sm-10">-->
+<!--                        <input type="number" th:object="${patId}" id="patId" name="patId" placeholder="Patient id" class="col-4" required>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <div class="col-sm-12">-->
+<!--                        <a class="btn btn-danger btn-sm" href="/SheetPatient.html">Patient list</a>-->
+<!--                        <input class="btn btn-primary btn-sm" type="submit" value="Patient by id">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </form>-->
+
+
+<!--        <div th:each="patient : ${uniquePatientList}" class="col-md-4 my-1">-->
+
+<!--            <a th:href="@{|/PatHistory/id/${patient.id}|}" >-->
+
+<!--                <p th:text= "${patient.lastname}"></p>-->
+
+<!--            </a>-->
+
+<!--        </div>-->
+
+<!--    </div>-->
     <div class="row">
+        <a href="/Patient/add" class="btn btn-primary btn-sm">Add New</a>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Birthdate</th>
+                <th>Gender</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="patient : ${uniquePatientList}">
+                <td th:text="${patient.id}"></td>
+                <td th:text="${patient.firstname}"></td>
+                <td th:text="${patient.lastname}"></td>
+                <td th:text="${patient.birthdate}"></td>
+                <td th:text="${patient.gender}"></td>
+                <td th:text="${patient.address}"></td>
+                <td th:text="${patient.phonenumber}"></td>
+                <td style="width: 15%" class="text-center">
+                    <a th:href="@{|/Patient/update/${patient.id}|}">Edit |</a>
+                    <a th:href="@{|/Patient/delete/${patient.id}|}"> Delete</a>
 
-        <div th:each="patient : ${uniquePatientList}" class="col-md-4 my-1">
-
-            <a th:href="@{|/PatHistory/id/${patient.id}|}" >
-
-                <p th:text= "${patient.lastname}"></p>
-
-            </a>
-
-        </div>
-
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <div class="row">
-        <p>
-        <a th:href="@{|/PatHistory/add|}" >Add New</a>
 
-        </p>
-    </div>
 
 </div>
 
