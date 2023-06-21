@@ -35,9 +35,9 @@ public class FrontController {
 //    }
     @RequestMapping("/")
     public String home(Model model) {
-        List<PatientHistory> patientList = frontProxy.patientHistoryList();
-        Set<PatientHistory> uniquePatients = new HashSet<>(patientList);
-        List<PatientHistory> uniquePatientList = new ArrayList<>(uniquePatients);
+        List<Patient> patientList = frontProxy.getPatientList();
+        Set<Patient> uniquePatients = new HashSet<>(patientList);
+        List<Patient> uniquePatientList = new ArrayList<>(uniquePatients);
 
         model.addAttribute("uniquePatientList", uniquePatientList);
         return "Home";
@@ -74,15 +74,15 @@ public class FrontController {
     }
 
     @GetMapping("/patient/add")
-    public String addPatient(PatientHistory patientHistory) {
+    public String getAddPatientHistory(PatientHistory patientHistory) {
         return "patient/add";
     }
 
     @PostMapping(value = "/PatHistory/add")
-    public String addPatient(@RequestBody PatientHistory patientHistory, Model model, RedirectAttributes redir) {
+    public String addPatientHistory(@RequestBody PatientHistory patientHistory, Model model, RedirectAttributes redir) {
 
         try {
-            ResponseEntity<Object> patientAdded = frontProxy.addPatient(patientHistory);
+            PatientHistory patientAdded = frontProxy.addPatient(patientHistory);
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
         return "patient/add";

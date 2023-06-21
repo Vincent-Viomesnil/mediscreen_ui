@@ -22,7 +22,7 @@ public interface FrontProxy {
     String getAssessmentById(@Valid @PathVariable Long patId);
 
     @PostMapping(value = "/PatHistory/add")
-    ResponseEntity<Object> addPatient(@Valid @RequestBody PatientHistory patientHistory);
+    PatientHistory addPatient(@Valid @RequestBody PatientHistory patientHistory);
 
     @PutMapping(value = "/PatHistory/update/{lastname}")
     PatientHistory updatePatient(@PathVariable String lastname, @RequestBody PatientHistory patientToUpdate);
@@ -38,7 +38,7 @@ public interface FrontProxy {
     Optional<Patient> getPatientByLastname(@Valid @PathVariable("lastname") String lastname);
 
     @PostMapping(value = "/Patient/add")
-    public ResponseEntity<Object> addPatient(@RequestBody Patient patientHistory);
+    Patient addPatient(@RequestBody Patient patient);
 
     @PutMapping(value = "/Patient/update/{lastname}")
     Patient updatePatient(@PathVariable String lastname, @RequestBody Patient patientToUpdate);
