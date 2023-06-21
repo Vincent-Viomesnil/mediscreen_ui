@@ -3,10 +3,12 @@ package com.ocr.mediscreen_ui.controller;
 import com.ocr.mediscreen_ui.model.Patient;
 import com.ocr.mediscreen_ui.model.PatientHistory;
 import com.ocr.mediscreen_ui.proxies.FrontProxy;
+import feign.FeignException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -33,9 +35,9 @@ public class FrontController {
 //    }
     @RequestMapping("/")
     public String home(Model model) {
-        List<Patient> patientList = frontProxy.getPatientList();
-        Set<Patient> uniquePatients = new HashSet<>(patientList);
-        List<Patient> uniquePatientList = new ArrayList<>(uniquePatients);
+        List<PatientHistory> patientList = frontProxy.patientHistoryList();
+        Set<PatientHistory> uniquePatients = new HashSet<>(patientList);
+        List<PatientHistory> uniquePatientList = new ArrayList<>(uniquePatients);
 
         model.addAttribute("uniquePatientList", uniquePatientList);
         return "Home";
@@ -51,12 +53,19 @@ public class FrontController {
 
 
     @GetMapping(value = "/PatHistory/id/{patId}")
-    public String getPatientHistoryById(@PathVariable Long patId, Model model) {
+    public String getPatientHistoryById(@PathVariable Long patId, Model model,RedirectAttributes redir) {
+        try {
         PatientHistory patientNotes = frontProxy.getPatientByPatId(patId);
-
         model.addAttribute("patientNotes", patientNotes);
-        return "SheetPatient";
+        redir.addFlashAttribute("success", "Patient successfully added");
+            return "SheetPatient";
+
+        } catch (FeignException e) {
+            redir.addFlashAttribute("error", e.status() + "during operation");
+            return "Home";
+        }
     }
+
 
 
     @RequestMapping(value = "Assess", method = RequestMethod.GET)
@@ -64,23 +73,35 @@ public class FrontController {
         return frontProxy.getAssessmentByLastname(lastname);
     }
 
+    @GetMapping("/patient/add")
+    public String addPatient(PatientHistory patientHistory) {
+        return "patient/add";
+    }
 
     @PostMapping(value = "/PatHistory/add")
-    public ResponseEntity<Object> addPatient(@RequestBody PatientHistory patientHistory) {
-        ResponseEntity<Object> patientAdded = frontProxy.addPatient(patientHistory);
-        return patientAdded;
+    public String addPatient(@RequestBody PatientHistory patientHistory, Model model, RedirectAttributes redir) {
+
+        try {
+            ResponseEntity<Object> patientAdded = frontProxy.addPatient(patientHistory);
+            model.addAttribute("patientAdded", patientAdded);
+            redir.addFlashAttribute("success", "Patient successfully added");
+        return "patient/add";
+    } catch (FeignException e) {
+            redir.addFlashAttribute("error", e.status() + "during operation");
+            return "Home";
+        }
     }
+
 
     @PutMapping(value = "/PatHistory/update/{lastname}")
     PatientHistory updatePatient(@PathVariable String lastname, @RequestBody PatientHistory patientToUpdate) {
         PatientHistory patientHistory = frontProxy.updatePatient(lastname, patientToUpdate);
         return patientHistory;
     }
-//
-//    @DeleteMapping(value = "/PatHistory/delete/{lastname}")
-//    PatientHistory deletePatient(@PathVariable String lastname) {
-//        PatientHistory patientHistory = frontProxy.deletePatient(lastname);
-//        return patientHistory;
-//    }
+
+    @DeleteMapping(value = "/PatHistory/delete/{lastname}")
+    PatientHistory deletePatient(@PathVariable String lastname) {
+        return frontProxy.deletePatient(lastname);
+    }
 
 }

@@ -13,7 +13,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PatientHistory {
-    @Id
+
     private ObjectId _id;
 
     private Long patId;

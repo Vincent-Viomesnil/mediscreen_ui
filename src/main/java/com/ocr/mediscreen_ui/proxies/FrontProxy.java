@@ -27,8 +27,8 @@ public interface FrontProxy {
     @PutMapping(value = "/PatHistory/update/{lastname}")
     PatientHistory updatePatient(@PathVariable String lastname, @RequestBody PatientHistory patientToUpdate);
 
-//    @DeleteMapping(value= "/PatHistory/delete/{lastname}")
-//    PatientHistory deletePatient(@PathVariable String lastname);
+    @DeleteMapping(value= "/PatHistory/delete/{lastname}")
+    PatientHistory deletePatient(@PathVariable String lastname);
     @GetMapping(value = "/PatHistory/id/{patId}")
     PatientHistory getPatientByPatId(@PathVariable Long patId);
     @RequestMapping(value="/Patients", method = RequestMethod.GET)

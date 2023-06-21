@@ -14,18 +14,16 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class Patient {
-    @Id
-    @NotNull
+
     private Long id;
-    @NotNull
+
     private String firstname;
-    @NotNull
+
     private String lastname;
-    @NotNull
+
     private Date birthdate;
-    @NotNull
+
     private String gender;
 
     private String address;
