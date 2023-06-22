@@ -128,10 +128,10 @@ public class FrontController {
     public String addPatient(@ModelAttribute("patient") Patient patient, Model model, RedirectAttributes redir){
         try {
             frontProxy.addPatient(patient);
+
             List<Patient> patientList = frontProxy.getPatientList();
             Set<Patient> uniquePatients = new HashSet<>(patientList);
             List<Patient> uniquePatientList = new ArrayList<>(uniquePatients);
-
             model.addAttribute("uniquePatientList", uniquePatientList);
 
             log.info("The user  added a new Patient: " +patient);
@@ -157,32 +157,54 @@ public class FrontController {
             PatientHistory patientAdded = frontProxy.addPatientHistory(patientHistory);
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
-            return "HomePH";
+
+            List<PatientHistory> uniquePatientList = getUniquePatientList();
+
+
+            model.addAttribute("uniquePatientList", uniquePatientList);
+            return "redirect:/PatientHistoryList";
     } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + "during operation");
             return "addPH";
         }
     }
 
-
-    @PutMapping(value = "/PatHistory/update/{patId}")
-    public String updatePatientHistory(@PathVariable Long patId, @RequestBody PatientHistory patientToUpdate, Model model,
+    @GetMapping("/PatHistory/update/{patId}")
+    public String updateForm(@PathVariable Long patId, Model model) {
+        PatientHistory patientHistory = frontProxy.getPatientByPatId(patId);
+        model.addAttribute("patientHistory", patientHistory);
+        return "updatePH";
+    }
+    @PostMapping(value = "/PatHistory/update/{patId}")
+    public String updatePatientHistory(@PathVariable Long patId, PatientHistory patientToUpdate, Model model,
     RedirectAttributes redir) {
         try {
             PatientHistory patientHistory = frontProxy.updatePatientById(patId, patientToUpdate);
             model.addAttribute("patientHistory", patientHistory);
-            redir.addFlashAttribute("success", "Patient successfully added");
-            return "update";
+
+            List<PatientHistory> uniquePatientList = getUniquePatientList();
+
+
+            model.addAttribute("uniquePatientList", uniquePatientList);
+            return "redirect:/PatientHistoryList";
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + "during operation");
-            return "Home";
+            return "HomePH";
         }
     }
 
     @PostMapping(value = "/PatHistory/delete/{id}")
-    public String deletePatient(@PathVariable Long id) {
+    public String deletePatient(@PathVariable Long id, Model model) {
         frontProxy.deletePatientById(id);
-        return "redirect:/HomePH";
+        List<PatientHistory> uniquePatientList = getUniquePatientList();
+        model.addAttribute("uniquePatientList", uniquePatientList);
+        return "redirect:/PatientHistoryList";
+    }
+
+    private List<PatientHistory> getUniquePatientList() {
+        List<PatientHistory> patientList = frontProxy.patientHistoryList();
+        Set<PatientHistory> uniquePatients = new HashSet<>(patientList);
+        return new ArrayList<>(uniquePatients);
     }
 
 }
