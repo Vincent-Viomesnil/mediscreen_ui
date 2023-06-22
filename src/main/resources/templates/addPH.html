@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Mediscreen</title>
+
+
+
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
+
+
+
+</head>
+
+<body>
+
+
+
+<div th:if="${success}" th:class="${alert}">
+    <div class="alert alert-success">
+        <strong>Patient succcessfully!</strong>
+    </div>
+</div>
+
+<div th:if="${error}" th:class="${alert}">
+    <div class="alert alert-danger">
+        <strong>Operation failed</strong>
+    </div>
+</div>
+
+
+<div class="container">
+
+
+
+
+ <h1>Application Mediscreen</h1>
+    <h2> Add New Patient </h2>
+
+
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12">
+                <div class="card-body justify-content-center">
+
+                    <form action='#' th:action="@{/PatHistory/add}" th:object="${patientHistory}" method="post" class="form-horizontal" style="width: 100%">
+
+                        <div class="form-group">
+                            <label for="patId" class="col-sm-2 control-label">Id</label>
+                            <div class="col-sm-10">
+                                <input type="number" th:field="*{patId}" id="patId" required placeholder="patId" class="col-4">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname" class="col-sm-2 control-label">Lastname</label>
+                            <div class="col-sm-10">
+                                <input type="text" th:field="*{lastname}" id="lastname" required placeholder="lastname" class="col-4" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes" class="col-sm-2 control-label">Notes</label>
+                            <div class="col-sm-10">
+                                <input type="text" th:field="*{notes}" id="notes" placeholder="notes" class="col-4">
+                            </div>
+                        </div>
+
+<!--                        <div class="form-group">-->
+<!--                            <div class="col-sm-12">-->
+<!--                                <input type="hidden" th:field="*{id}">-->
+<!--                                <a class="btn btn-danger btn-sm" href="/Patient/validate">Cancel</a>-->
+<!--                                <input class="btn btn-primary btn-sm" type="submit" value="Add patient">-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <a class="btn btn-danger btn-sm" href="/PatientList">Cancel</a>
+                                <input class="btn btn-primary btn-sm" type="submit" value="Add Patient">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+</div>
+
+
+
+
+
+<script type="text/javascript" src="webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+
+
+</div>
+</body>
+
+</html>

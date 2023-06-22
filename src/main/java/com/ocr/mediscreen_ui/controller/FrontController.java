@@ -41,6 +41,16 @@ public class FrontController {
         return "Home";
     }
 
+    @RequestMapping("/PatientHistoryList")
+    public String homePH(Model model) {
+        List<PatientHistory> patientList = frontProxy.patientHistoryList();
+        Set<PatientHistory> uniquePatients = new HashSet<>(patientList);
+        List<PatientHistory> uniquePatientList = new ArrayList<>(uniquePatients);
+
+        model.addAttribute("uniquePatientList", uniquePatientList);
+        return "HomePH";
+    }
+
     @RequestMapping("/Assess/id/{patId}")
     public String getAssessPatientById(@PathVariable Long patId, Model model) {
         String patientAssessment = frontProxy.getAssessmentById(patId);
@@ -133,17 +143,24 @@ public class FrontController {
         }
     }
 
+    @GetMapping(value ="/PatHistory/add")
+    public String getPatientHistory(Model model) {
+        PatientHistory patientHistory = new PatientHistory();
+        model.addAttribute("patientHistory", patientHistory);
+        log.info("The user want to add a new Patient: " +patientHistory);
+        return "addPH";
+    }
     @PostMapping(value = "/PatHistory/add")
-    public String addPatientHistory(@RequestBody PatientHistory patientHistory, Model model, RedirectAttributes redir) {
+    public String addPatientHistory(PatientHistory patientHistory, Model model, RedirectAttributes redir) {
 
         try {
             PatientHistory patientAdded = frontProxy.addPatientHistory(patientHistory);
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
-        return "add";
+            return "HomePH";
     } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + "during operation");
-            return "Home";
+            return "addPH";
         }
     }
 
