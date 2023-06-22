@@ -45,7 +45,7 @@
             <div class="col-lg-12">
                 <div class="card-body justify-content-center">
 
-                    <form action='#' th:action="@{/Patient/validate}" th:object="${patient}" method="post" class="form-horizontal" style="width: 100%">
+                    <form action='#' th:action="@{/Patient/add}" th:object="${patient}" method="post" class="form-horizontal" style="width: 100%">
 
                         <div class="form-group">
                             <label for="id" class="col-sm-2 control-label">Id</label>
@@ -90,13 +90,6 @@
                             </div>
                         </div>
 
-<!--                        <div class="form-group">-->
-<!--                            <div class="col-sm-12">-->
-<!--                                <input type="hidden" th:field="*{id}">-->
-<!--                                <a class="btn btn-danger btn-sm" href="/Patient/validate">Cancel</a>-->
-<!--                                <input class="btn btn-primary btn-sm" type="submit" value="Add patient">-->
-<!--                            </div>-->
-<!--                        </div>-->
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <a class="btn btn-danger btn-sm" href="/PatientList">Cancel</a>

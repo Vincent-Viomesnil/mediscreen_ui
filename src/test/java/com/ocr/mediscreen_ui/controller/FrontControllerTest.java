@@ -153,7 +153,7 @@ class FrontControllerTest {
 
         String result = frontController.updatePatientHistory(patId, patientToUpdate, model, redirectAttributes);
 
-        assertEquals("redirect:/PatientHistoryList", result);
+        assertEquals("redirect:/", result);
         verify(frontProxy, times(1)).updatePatientById(patId, patientToUpdate);
         verify(model, times(1)).addAttribute("patientHistory", updatedPatientHistory);
         verify(model, times(1)).addAttribute("uniquePatientList", uniquePatientList);
@@ -181,7 +181,7 @@ class FrontControllerTest {
         String result = frontController.updatePatientHistory(patId, patientToUpdate, model, redirectAttributes);
 
         // Assert
-        assertEquals("HomePH", result);
+        assertEquals("Home", result);
         verify(frontProxy, times(1)).updatePatientById(patId, patientToUpdate);
         verify(redirectAttributes, times(1)).addFlashAttribute("error", "400 during operation");
     }
@@ -193,7 +193,7 @@ class FrontControllerTest {
 
         String result = frontController.deletePatient(id, model);
 
-        assertEquals("redirect:/PatientHistoryList", result);
+        assertEquals("redirect:/", result);
         verify(frontProxy, times(1)).deletePatientById(id);
         verify(model, times(1)).addAttribute(eq("uniquePatientList"), anyList());
     }

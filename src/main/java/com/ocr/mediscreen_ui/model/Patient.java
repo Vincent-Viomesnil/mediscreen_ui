@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -19,7 +20,7 @@ public class Patient {
 
     private String lastname;
 
-    private Date birthdate;
+    private LocalDate birthdate;
 
     private String gender;
 

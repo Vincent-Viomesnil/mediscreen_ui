@@ -111,45 +111,6 @@ public class FrontController {
         return frontProxy.getAssessmentByLastname(lastname);
     }
 
-//    @GetMapping(value ="/Patient/add")
-//    public String getPatient(Patient patient) {
-//        return "add";
-//    }
-
-    @GetMapping(value ="/Patient/add")
-    public String getPatient(Patient patient) {
-//        Patient patient = new Patient();
-//        model.addAttribute("patient", patient);
-//        log.info("The user want to add a new Patient: " +patient);
-        return "add";
-    }
-
-//    @GetMapping(value ="/Patient/up")
-//    public String upPatient(Model model) {
-//        Patient patient = new Patient();
-//        model.addAttribute("patient", patient);
-//        return "patient/update";
-//    }
-
-    @PostMapping(value = "/Patient/validate")
-    public String addPatient(@ModelAttribute("patient") Patient patient, Model model, RedirectAttributes redir){
-        try {
-            frontProxy.addPatient(patient);
-
-            List<Patient> patientList = frontProxy.getPatientList();
-            Set<Patient> uniquePatients = new HashSet<>(patientList);
-            List<Patient> uniquePatientList = new ArrayList<>(uniquePatients);
-            model.addAttribute("uniquePatientList", uniquePatientList);
-
-            log.info("The user  added a new Patient: " +patient);
-//            log.info("The user  added a new Patient: " +patientAdded);
-            return "redirect:/Home";
-        } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + " during operation");
-            return "add";
-        }
-    }
-
     @GetMapping(value ="/PatHistory/add")
     public String getPatientHistory(Model model) {
         PatientHistory patientHistory = new PatientHistory();
@@ -157,6 +118,32 @@ public class FrontController {
         log.info("The user want to add a new Patient: " +patientHistory);
         return "addPH";
     }
+
+    @GetMapping(value ="/Patient/add")
+    public String getPatient(Model model) {
+        Patient patient = new Patient();
+        model.addAttribute("patient", patient);
+        log.info("The user want to add a new Patient: " +patient);
+        return "add";
+    }
+
+    @PostMapping(value = "/Patient/add")
+    public String addPatient(Patient patient, Model model, RedirectAttributes redir) {
+
+        try {
+            Patient patientAdded = frontProxy.addPatient(patient);
+            model.addAttribute("patientAdded", patientAdded);
+            redir.addFlashAttribute("success", "Patient successfully added");
+
+            List<Patient> uniquePatientList = getUniquePatientList();
+            model.addAttribute("uniquePatientList", uniquePatientList);
+            return "redirect:/PatientList";
+        } catch (FeignException e) {
+            redir.addFlashAttribute("error", e.status() + " during operation");
+            return "add";
+        }
+    }
+
     @PostMapping(value = "/PatHistory/add")
     public String addPatientHistory(PatientHistory patientHistory, Model model, RedirectAttributes redir) {
 
