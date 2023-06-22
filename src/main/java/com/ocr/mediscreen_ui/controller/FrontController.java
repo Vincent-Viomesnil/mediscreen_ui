@@ -94,13 +94,16 @@ public class FrontController {
         return frontProxy.getAssessmentByLastname(lastname);
     }
 
-
+//    @GetMapping(value ="/Patient/add")
+//    public String getPatient(Patient patient) {
+//        return "add";
+//    }
 
     @GetMapping(value ="/Patient/add")
-    public String getPatient(Model model) {
-        Patient patient = new Patient();
-        model.addAttribute("patient", patient);
-        log.info("The user want to add a new Patient: " +patient);
+    public String getPatient(Patient patient) {
+//        Patient patient = new Patient();
+//        model.addAttribute("patient", patient);
+//        log.info("The user want to add a new Patient: " +patient);
         return "add";
     }
 
@@ -112,9 +115,9 @@ public class FrontController {
 //    }
 
     @PostMapping(value = "/Patient/validate")
-    public String addPatient(Patient patient, Model model, RedirectAttributes redir){
+    public String addPatient(@ModelAttribute("patient") Patient patient, Model model, RedirectAttributes redir){
         try {
-            Patient patientAdded = frontProxy.addPatient(patient);
+            frontProxy.addPatient(patient);
             List<Patient> patientList = frontProxy.getPatientList();
             Set<Patient> uniquePatients = new HashSet<>(patientList);
             List<Patient> uniquePatientList = new ArrayList<>(uniquePatients);
@@ -122,8 +125,8 @@ public class FrontController {
             model.addAttribute("uniquePatientList", uniquePatientList);
 
             log.info("The user  added a new Patient: " +patient);
-            log.info("The user  added a new Patient: " +patientAdded);
-            return "Home";
+//            log.info("The user  added a new Patient: " +patientAdded);
+            return "redirect:/Home";
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + "during operation");
             return "add";
