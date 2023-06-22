@@ -179,9 +179,10 @@ public class FrontController {
         }
     }
 
-    @DeleteMapping(value = "/PatHistory/delete/{id}")
-    PatientHistory deletePatient(@PathVariable Long id) {
-        return frontProxy.deletePatientById(id);
+    @PostMapping(value = "/PatHistory/delete/{id}")
+    public String deletePatient(@PathVariable Long id) {
+        frontProxy.deletePatientById(id);
+        return "redirect:/HomePH";
     }
 
 }
