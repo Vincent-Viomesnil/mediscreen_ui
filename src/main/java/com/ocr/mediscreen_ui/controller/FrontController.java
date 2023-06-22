@@ -36,7 +36,7 @@ public class FrontController {
 
     @RequestMapping("/PatientList")
     public String home(Model model) {
-        List<Patient> uniquePatientList = getUniquePatientList();
+        List<Patient> uniquePatientList = frontProxy.getPatientList();
 
         model.addAttribute("uniquePatientList", uniquePatientList);
         return "Home";
@@ -135,7 +135,7 @@ public class FrontController {
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
 
-            List<Patient> uniquePatientList = getUniquePatientList();
+            List<Patient> uniquePatientList = frontProxy.getPatientList();
             model.addAttribute("uniquePatientList", uniquePatientList);
             return "redirect:/PatientList";
         } catch (FeignException e) {
@@ -184,13 +184,13 @@ public class FrontController {
             Patient patient = frontProxy.updatePatient(id, patientToUpdate);
             model.addAttribute("patient", patient);
 
-            List<Patient> uniquePatientList = getUniquePatientList();
+            List<Patient> uniquePatientList = frontProxy.getPatientList();
 
             model.addAttribute("uniquePatientList", uniquePatientList);
             return "redirect:/PatientList";
-        } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + " during operation");
-            return "HomePH";
+        } catch (FeignException.BadRequest e) {
+            redir.addFlashAttribute("error", "Bad request during operation");
+            return "redirect:/PatientList";
         }
     }
     @PostMapping(value = "/PatHistory/update/{patId}")
@@ -228,9 +228,9 @@ public class FrontController {
         return patientList;
     }
 
-    public List<Patient> getUniquePatientList() {
-        List<Patient> patientList = frontProxy.getPatientList();
-        Set<Patient> uniquePatients = new HashSet<>(patientList);
-        return new ArrayList<>(uniquePatients);
-    }
+//    public List<Patient> getUniquePatientList() {
+//        List<Patient> patientList = frontProxy.getPatientList();
+//        Set<Patient> uniquePatients = new HashSet<>(patientList);
+//        return new ArrayList<>(uniquePatients);
+//    }
 }

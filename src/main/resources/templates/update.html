@@ -45,7 +45,7 @@
             <div class="col-lg-12">
                 <div class="card-body justify-content-center">
 
-                    <form action='#' th:action="@{/Patient/update/{id}(id=${patient.get().id})}"  th:object="${patient}"  method="post" class="form-horizontal" style="width: 100%">
+                    <form action='#' th:action="@{|/Patient/update/${id}|}"  th:object="${patient}"  method="post" class="form-horizontal" style="width: 100%">
 
                         <div class="form-group">
                             <label for="id" class="col-sm-2 control-label">Id</label>
