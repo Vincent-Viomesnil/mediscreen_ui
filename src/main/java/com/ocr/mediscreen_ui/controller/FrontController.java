@@ -119,7 +119,7 @@ public class FrontController {
         return "addPH";
     }
 
-    @GetMapping(value ="/Patient/add")
+   @GetMapping(value="/Patient/add")
     public String getPatient(Model model) {
         Patient patient = new Patient();
         model.addAttribute("patient", patient);
@@ -187,7 +187,7 @@ public class FrontController {
             List<Patient> uniquePatientList = getUniquePatientList();
 
             model.addAttribute("uniquePatientList", uniquePatientList);
-            return "redirect:/";
+            return "redirect:/PatientList";
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
             return "HomePH";
