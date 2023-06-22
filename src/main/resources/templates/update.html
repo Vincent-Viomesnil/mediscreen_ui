@@ -45,12 +45,12 @@
             <div class="col-lg-12">
                 <div class="card-body justify-content-center">
 
-                    <form action='#' th:action="@{/Patient/update}" th:object="${patient}" method="put" class="form-horizontal" style="width: 100%">
+                    <form action='#' th:action="@{/Patient/update/{id}(id=${patient.get().id})}"  th:object="${patient}"  method="post" class="form-horizontal" style="width: 100%">
 
                         <div class="form-group">
                             <label for="id" class="col-sm-2 control-label">Id</label>
                             <div class="col-sm-10">
-                                <input type="number" th:field="*{id}" id="id" placeholder="id" required class="col-4">
+                                <input type="number" th:field="*{id}" id="id" required placeholder="id" class="col-4">
                             </div>
                         </div>
                         <div class="form-group">
@@ -91,9 +91,10 @@
                         </div>
 
 
+
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <a class="btn btn-danger btn-sm" href="/Patient/validate">Cancel</a>
+                                <a class="btn btn-danger btn-sm" href="/">Cancel</a>
                                 <input class="btn btn-primary btn-sm" type="submit" value="Update Patient">
                             </div>
                         </div>

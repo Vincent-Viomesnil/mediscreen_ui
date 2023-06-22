@@ -21,8 +21,8 @@ public interface FrontProxy {
     @GetMapping(value = "Patient/{lastname}")
     Optional<Patient> getPatientByLastname(@Valid @PathVariable("lastname") String lastname);
 
-    @GetMapping(value = "Patient/{id}")
-    Optional<Patient> getPatientById(@Valid @PathVariable("id") Long id);
+    @GetMapping(value = "Patient/id/{id}")
+    Optional<Patient> getPatientById(@PathVariable Long id);
 
     @RequestMapping(value = "Assess", method = RequestMethod.GET)
     String getAssessmentByLastname(@Valid @RequestParam("lastname") String lastname);

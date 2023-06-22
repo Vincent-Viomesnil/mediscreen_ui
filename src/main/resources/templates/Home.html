@@ -82,9 +82,10 @@
                 <td th:text="${patient.address}"></td>
                 <td th:text="${patient.phonenumber}"></td>
                 <td style="width: 15%" class="text-center">
-                    <a th:href="@{|/Patient/update/${patient.id}|}">Edit |</a>
-                    <a th:href="@{|/Patient/delete/${patient.id}|}"> Delete</a>
-
+                    <a  th:href="@{/Patient/update/{id}(id=${patient.id})}" class="btn btn-primary btn-sm">Update </a>
+                    <form th:action="@{/Patient/delete/{id}(id=${patient.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this patient?')">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
