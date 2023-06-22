@@ -50,7 +50,7 @@ public class FrontController {
             return "SheetPatient";
 
         } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + "during operation");
+            redir.addFlashAttribute("error", e.status() + " during operation");
             return "Home";
         }
     }
@@ -99,7 +99,7 @@ public class FrontController {
             return "Assess";
 
         } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + "during operation");
+            redir.addFlashAttribute("error", e.status() + " during operation");
             return "Home";
         }
     }
@@ -156,7 +156,7 @@ public class FrontController {
 //            log.info("The user  added a new Patient: " +patientAdded);
             return "redirect:/Home";
         } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + "during operation");
+            redir.addFlashAttribute("error", e.status() + " during operation");
             return "add";
         }
     }
@@ -182,7 +182,7 @@ public class FrontController {
             model.addAttribute("uniquePatientList", uniquePatientList);
             return "redirect:/PatientHistoryList";
     } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + "during operation");
+            redir.addFlashAttribute("error", e.status() + " during operation");
             return "addPH";
         }
     }
@@ -206,7 +206,7 @@ public class FrontController {
             model.addAttribute("uniquePatientList", uniquePatientList);
             return "redirect:/PatientHistoryList";
         } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + "during operation");
+            redir.addFlashAttribute("error", e.status() + " during operation");
             return "HomePH";
         }
     }
@@ -219,7 +219,7 @@ public class FrontController {
         return "redirect:/PatientHistoryList";
     }
 
-    private List<PatientHistory> getUniquePatientHistoryList() {
+    public List<PatientHistory> getUniquePatientHistoryList() {
         List<PatientHistory> patientList = frontProxy.patientHistoryList();
         patientList.stream().collect(Collectors.groupingBy(PatientHistory::getPatId))
                 .values().stream()
