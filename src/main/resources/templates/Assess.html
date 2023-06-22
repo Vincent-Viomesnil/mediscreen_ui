@@ -12,8 +12,23 @@
     <h1 class="text-center">Application Mediscreen</h1>
     <div class="row">
         <div class="col-md-4 mx-auto mt-5 text-center">
-            <p th:text="${patientAssessment}" class="font-weight-bold"></p>
+<!--            <p th:text="${patientAssessment}" class="font-weight-bold"></p>-->
             <p>
+
+            <div th:if="${patientNotes}">
+                <h3>Notes du patient</h3>
+                <ul>
+                    <li th:each="note : ${patientNotes.notes}" th:text="${note}"></li>
+                </ul>
+            <form th:action="@{/Assess/id/{patId}(patId=${patientNotes.patId})}" method="get">
+                <button type="submit" class="btn btn-primary">Assess</button>
+            </form>
+            <div>
+                <p>Résultat de l'assessment : <span th:text="${patientAssessment}"></span></p>
+            </div>
+            </div>
+
+
 
             </p>
         </div>

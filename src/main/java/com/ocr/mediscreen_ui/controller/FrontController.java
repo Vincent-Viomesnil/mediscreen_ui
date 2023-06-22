@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -40,23 +41,6 @@ public class FrontController {
         model.addAttribute("uniquePatientList", uniquePatientList);
         return "Home";
     }
-
-    @RequestMapping("/PatientHistoryList")
-    public String homePH(Model model) {
-        List<PatientHistory> patientList = frontProxy.patientHistoryList();
-        Set<PatientHistory> uniquePatients = new HashSet<>(patientList);
-        List<PatientHistory> uniquePatientList = new ArrayList<>(uniquePatients);
-
-        model.addAttribute("uniquePatientList", uniquePatientList);
-        return "HomePH";
-    }
-
-    @RequestMapping("/Assess/id/{patId}")
-    public String getAssessPatientById(@PathVariable Long patId, Model model) {
-        String patientAssessment = frontProxy.getAssessmentById(patId);
-        model.addAttribute("patientAssessment", patientAssessment);
-        return "Assess";
-    }
     @GetMapping(value = "/Patient/id/{id}")
     public String getPatientById(@PathVariable Long id, Model model,RedirectAttributes redir) {
         try {
@@ -70,6 +54,40 @@ public class FrontController {
             return "Home";
         }
     }
+    @RequestMapping("/PatientHistoryList")
+    public String homePH(Model model) {
+        List<PatientHistory> patientList = getUniquePatientHistoryList();
+
+        model.addAttribute("patientList", patientList);
+        return "HomePH";
+    }
+
+    @RequestMapping("/PatientHistoryList/Filter")
+    public String getSheetPatient(Model model) {
+        List<PatientHistory> patientList = frontProxy.patientHistoryList();
+
+        List<PatientHistory> filteredList = patientList.stream()
+                .collect(Collectors.groupingBy(PatientHistory::getPatId))
+                .values().stream()
+                .flatMap(group -> group.stream().limit(1))
+                .collect(Collectors.toList());
+
+        model.addAttribute("patientList", filteredList);
+        return "SheetPatient";
+    }
+
+
+    @RequestMapping("/Assess/id/{patId}")
+    public String getAssessPatientById(@PathVariable Long patId, Model model) {
+        String patientAssessment = frontProxy.getAssessmentById(patId);
+        return "redirect:/Assess/result/" + patId + "?assessment=" + patientAssessment;
+    }
+    @GetMapping(value = "/Assess/result/{patId}")
+    public String getAssessmentResult(@PathVariable Long patId, @RequestParam("assessment") String assessment, Model model) {
+        model.addAttribute("patId", patId);
+        model.addAttribute("assessment", assessment);
+        return "AssessmentResult";
+    }
 
 
     @GetMapping(value = "/PatHistory/id/{patId}")
@@ -77,8 +95,8 @@ public class FrontController {
         try {
         PatientHistory patientNotes = frontProxy.getPatientByPatId(patId);
         model.addAttribute("patientNotes", patientNotes);
-        redir.addFlashAttribute("success", "Patient successfully added");
-            return "SheetPatient";
+
+            return "Assess";
 
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + "during operation");
@@ -158,7 +176,7 @@ public class FrontController {
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
 
-            List<PatientHistory> uniquePatientList = getUniquePatientList();
+            List<PatientHistory> uniquePatientList = getUniquePatientHistoryList();
 
 
             model.addAttribute("uniquePatientList", uniquePatientList);
@@ -182,7 +200,7 @@ public class FrontController {
             PatientHistory patientHistory = frontProxy.updatePatientById(patId, patientToUpdate);
             model.addAttribute("patientHistory", patientHistory);
 
-            List<PatientHistory> uniquePatientList = getUniquePatientList();
+            List<PatientHistory> uniquePatientList = getUniquePatientHistoryList();
 
 
             model.addAttribute("uniquePatientList", uniquePatientList);
@@ -196,15 +214,19 @@ public class FrontController {
     @PostMapping(value = "/PatHistory/delete/{id}")
     public String deletePatient(@PathVariable Long id, Model model) {
         frontProxy.deletePatientById(id);
-        List<PatientHistory> uniquePatientList = getUniquePatientList();
+        List<PatientHistory> uniquePatientList = getUniquePatientHistoryList();
         model.addAttribute("uniquePatientList", uniquePatientList);
         return "redirect:/PatientHistoryList";
     }
 
-    private List<PatientHistory> getUniquePatientList() {
+    private List<PatientHistory> getUniquePatientHistoryList() {
         List<PatientHistory> patientList = frontProxy.patientHistoryList();
-        Set<PatientHistory> uniquePatients = new HashSet<>(patientList);
-        return new ArrayList<>(uniquePatients);
+        patientList.stream().collect(Collectors.groupingBy(PatientHistory::getPatId))
+                .values().stream()
+                .filter(group -> group.size() > 1)
+                .map(group -> group.get(0).getPatId())
+                .collect(Collectors.toList());
+        return patientList;
     }
 
 }

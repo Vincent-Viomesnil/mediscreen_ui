@@ -70,17 +70,20 @@
 <!--    </div>-->
     <div class="row">
         <a href="/PatHistory/add" class="btn btn-primary btn-sm">Add New</a>
+        <a href="/PatientHistoryList/Filter" class="btn btn-primary btn-sm">Filter </a>
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>Id</th>
                 <th>Lastname</th>
                 <th>Notes</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="patient : ${uniquePatientList}">
+            <tr th:each="patient : ${patientList}">
                 <td th:text="${patient.patId}"></td>
+                <td th:text="${patient.lastname}"></td>
                 <td th:text="${patient.notes}"></td>
                 <td style="width: 15%" class="text-center">
                     <a  th:href="@{/PatHistory/update/{patId}(patId=${patient.patId})}" class="btn btn-primary btn-sm">Update </a>

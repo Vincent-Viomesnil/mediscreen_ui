@@ -1,4 +1,4 @@
-package com.ocr.mediscreen;
+package com.ocr.mediscreen_ui;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
