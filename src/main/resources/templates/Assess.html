@@ -18,7 +18,7 @@
             <p>Last Name: <span th:text="${patientHistory.lastname}"></span></p>
             <p>Notes: <span th:each="note : ${patientHistory.notes}" th:text="${note}"></span></p>
 
-            <form th:action="@{/Assess/id/{patId}(patId=${patientHistory.patId})}" method="get">
+            <form th:action="@{/assessment/id/{patId}(patId=${patientHistory.patId})}" method="get">
                 <button type="submit">Perform Assessment</button>
             </form>
 
