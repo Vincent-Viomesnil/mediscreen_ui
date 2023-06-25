@@ -1,18 +1,34 @@
 version: '3.9'
 
 services:
+  db_mysql:
+    container_name: db_mysql
+    build: ../mediscreen/database
+    ports:
+      - "13306:3306"
+
+  patient:
+    container_name: patient
+    build: ../mediscreen
+    ports:
+      - "881:8081"
+    depends_on:
+      - db_mysql
+    environment:
+      spring.datasource.url: "jdbc:mysql://db_mysql:3306/bdd_mediscreen"
+
   mongodb:
     container_name: mongodb
     build: ../mediscreen_mdb/database
     ports:
-      - "2717:27017"
+      - "2727:27017"
 
   patient_mdb:
     container_name: patient_mdb
     build: ../mediscreen_mdb
     ports:
-      - "882:8082"
+      - "888:8082"
     depends_on:
       - mongodb
     environment:
-      spring.datasource.url: "mongodb://mongodb:27017/MediscreenDatabase"
+      spring.data.mongodb.uri: "mongodb://mongodb:27017/MediscreenDatabase"
