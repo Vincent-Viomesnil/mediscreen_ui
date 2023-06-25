@@ -5,6 +5,7 @@ import com.ocr.mediscreen_ui.model.PatientHistory;
 import com.ocr.mediscreen_ui.proxies.FrontProxy;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FrontController {
 
-    private final FrontProxy frontProxy;
+    @Autowired
+    private FrontProxy frontProxy;
 
 
     public FrontController(FrontProxy frontProxy) {
