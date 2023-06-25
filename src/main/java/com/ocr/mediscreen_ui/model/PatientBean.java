@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nonapi.io.github.classgraph.json.Id;
 
 import java.time.LocalDate;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PatientBean {
 
+    @Id
     private Long id;
 
     private String firstname;

@@ -38,19 +38,19 @@ public class FrontController {
         model.addAttribute("uniquePatientList", uniquePatientList);
         return "Home";
     }
-//    @GetMapping(value = "/Patient/id/{id}")
-//    public String getPatientById(@PathVariable Long id, Model model,RedirectAttributes redir) {
-//        try {
-//            PatientBean patient = frontProxy.getPatientById(id);
-//            model.addAttribute("patient", patient);
-//            redir.addFlashAttribute("success", "Patient successfully added");
-//            return "SheetPatient";
-//
-//        } catch (FeignException e) {
-//            redir.addFlashAttribute("error", e.status() + " during operation");
-//            return "Home";
-//        }
-//    }
+    @GetMapping(value = "/Patient/id/{id}")
+    public String getPatientById(@PathVariable Long id, Model model,RedirectAttributes redir) {
+        try {
+            PatientBean patient = frontProxy.getPatientById(id);
+            model.addAttribute("patient", patient);
+            redir.addFlashAttribute("success", "Patient successfully added");
+            return "SheetPatient";
+
+        } catch (FeignException e) {
+            redir.addFlashAttribute("error", e.status() + " during operation");
+            return "Home";
+        }
+    }
 
     @GetMapping("/PatientHistoryList/Filter")
     public String getSheetPatient(Model model) {
@@ -65,20 +65,6 @@ public class FrontController {
         model.addAttribute("filteredList", filteredList);
         return "SheetPatient";
     }
-
-
-//    @GetMapping("/Assess/id/{patId}")
-//    public String getAssessPatientById(@PathVariable Long patId, Model model) {
-//        String patientAssessment = frontProxy.getAssessmentById(patId);
-//        return "redirect:/Assess/result/" + patId + "?assessment=" + patientAssessment;
-//    }
-//    @GetMapping(value = "/Assess/result/{patId}")
-//    public String getAssessmentResult(@PathVariable Long patId, @RequestParam("assessment") String assessment, Model model) {
-//        model.addAttribute("patId", patId);
-//        model.addAttribute("assessment", assessment);
-//        return "AssessmentResult";
-//    }
-
 
 
 
@@ -115,12 +101,6 @@ public class FrontController {
         }
     }
 
-    @DeleteMapping(value = "/Patient/delete/{id}")
-    public String deletePatientById(@PathVariable Long id, Model model) {
-        PatientBean patient = new PatientBean();
-        model.addAttribute("patient", patient);
-        return "Home";
-    }
 
 
     @RequestMapping(value = "Assess", method = RequestMethod.GET)
@@ -154,7 +134,7 @@ public class FrontController {
 
             List<PatientBean> uniquePatientList = frontProxy.patientList();
             model.addAttribute("uniquePatientList", uniquePatientList);
-            return "redirect:/PatientList";
+            return "Home";
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
             return "add";
@@ -216,19 +196,27 @@ public class FrontController {
         try {
             PatientHistoryBean patientHistory = frontProxy.updatePatientById(patId, patientToUpdate);
             model.addAttribute("patientHistory", patientHistory);
-
             List<PatientHistoryBean> uniquePatientList = getUniquePatientHistoryList();
 
             model.addAttribute("uniquePatientList", uniquePatientList);
             return "redirect:/";
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
-            return "Home";
+            return "HomePH";
         }
     }
 
-    @PostMapping(value = "/PatHistory/delete/{id}")
+    @PostMapping(value = "/Patient/delete/{id}")
     public String deletePatient(@PathVariable Long id, Model model) {
+        frontProxy.deletePatient(id);
+        List<PatientBean> uniquePatientList = frontProxy.patientList();
+        model.addAttribute("uniquePatientList", uniquePatientList);
+        return "redirect:/PatientList";
+    }
+
+
+    @PostMapping(value = "/PatHistory/delete/{id}")
+    public String deletePatientById(@PathVariable Long id, Model model) {
         frontProxy.deletePatientById(id);
         List<PatientHistoryBean> uniquePatientList = getUniquePatientHistoryList();
         model.addAttribute("uniquePatientList", uniquePatientList);
