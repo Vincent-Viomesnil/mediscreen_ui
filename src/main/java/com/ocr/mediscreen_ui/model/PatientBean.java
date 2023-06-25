@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PatientBean {
 
-    @Id
+
     private Long id;
 
     private String firstname;
