@@ -23,11 +23,6 @@ public class FrontController {
     private FrontProxy frontProxy;
 
 
-    public FrontController(FrontProxy frontProxy) {
-        this.frontProxy = frontProxy;
-    }
-
-
     @RequestMapping("/")
     public String homePH(Model model) {
         List<PatientHistory> patientList = getUniquePatientHistoryList();
