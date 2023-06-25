@@ -1,10 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Assessment Result</title>
+    <title>Assessment</title>
 </head>
 <body>
-<h1>Assessment Result</h1>
-<p>Here the result for diabetes assessment for patient : [[${assessment}]]</p>
+<h1>Assessment</h1>
+<p>Patient ID: <span th:text="${patId}"></span></p>
+<p>Last Name: <span th:text="${lastname}"></span></p>
+<p>Notes: <span th:each="note : ${notes}" th:text="${note}"></span></p>
+<p>Assessment Result: <span th:text="${assessment}"></span></p>
 </body>
 </html>
+

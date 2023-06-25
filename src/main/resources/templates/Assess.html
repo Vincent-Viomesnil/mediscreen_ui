@@ -4,36 +4,27 @@
 <head>
     <title>Mediscreen</title>
 
-    <link rel="stylesheet" type="text/css"
-          href="http://localhost:8080/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
+
 </head>
 <body>
 <div class="container">
-    <h1 class="text-center">Application Mediscreen</h1>
+    <h1 class="text-center">Patient History</h1>
     <div class="row">
         <div class="col-md-4 mx-auto mt-5 text-center">
 <!--            <p th:text="${patientAssessment}" class="font-weight-bold"></p>-->
-            <p>
 
-            <div th:if="${patientNotes}">
-                <h3>Notes du patient</h3>
-                <ul>
-                    <li th:each="note : ${patientNotes.notes}" th:text="${note}"></li>
-                </ul>
-            <form th:action="@{/Assess/id/{patId}(patId=${patientNotes.patId})}" method="get">
-                <button type="submit" class="btn btn-primary">Assess</button>
+            <p>ID: <span th:text="${patientHistory.patId}"></span></p>
+            <p>Last Name: <span th:text="${patientHistory.lastname}"></span></p>
+            <p>Notes: <span th:each="note : ${patientHistory.notes}" th:text="${note}"></span></p>
+
+            <form th:action="@{/Assess/id/{patId}(patId=${patientHistory.patId})}" method="get">
+                <button type="submit">Perform Assessment</button>
             </form>
-            <div>
-                <p>Résultat de l'assessment : <span th:text="${patientAssessment}"></span></p>
-            </div>
-            </div>
 
-
-
-            </p>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="http://localhost:8080/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
 </body>
 </html>

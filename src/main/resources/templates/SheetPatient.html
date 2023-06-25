@@ -28,11 +28,11 @@
 
     <div class="row">
 
-        <div th:each="patient : ${patientList}" class="col-md-4 my-1">
+        <div th:each="patientHistory : ${filteredList}" class="col-md-4 my-1">
 
-            <a th:href="@{/PatHistory/id/{patId}(patId=${patient.patId})}"  >
+            <a th:href="@{/PatHistory/note/{patId}(patId=${patientHistory.patId})}"  >
 
-                <p th:text= "${patient.lastname}"></p>
+                <p th:text= "${patientHistory.lastname}"></p>
 
             </a>
 

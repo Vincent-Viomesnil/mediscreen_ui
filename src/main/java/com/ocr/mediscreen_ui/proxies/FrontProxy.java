@@ -1,9 +1,8 @@
 package com.ocr.mediscreen_ui.proxies;
 
-import com.ocr.mediscreen_ui.model.Patient;
-import com.ocr.mediscreen_ui.model.PatientHistory;
+import com.ocr.mediscreen_ui.model.PatientBean;
+import com.ocr.mediscreen_ui.model.PatientHistoryBean;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -12,59 +11,48 @@ import java.util.Optional;
 
 @FeignClient(name = "mediscreen-assess", url = "localhost:8080")
 public interface FrontProxy {
-    @RequestMapping(value = "/PatHistoryList", method = RequestMethod.GET)
-    List<PatientHistory> patientHistoryList();
 
-    @RequestMapping(value = "/Patients", method = RequestMethod.GET)
-    List<Patient> getPatientList();
+    @GetMapping(value = "/PatHistoryList")
+    List<PatientHistoryBean> patientHistoryList();
 
-    @GetMapping(value = "Patient/{lastname}")
-    Optional<Patient> getPatientByLastname(@Valid @PathVariable("lastname") String lastname);
+    @GetMapping(value = "/PatHistory/lastname/{lastname}")
+    PatientHistoryBean getPatientHistoryByLastname(@PathVariable("lastname") String lastname);
+
+    @GetMapping(value = "/PatHistory/id/{patId}")
+    PatientHistoryBean getPatientByPatId(@PathVariable Long patId);
+    @GetMapping(value = "/Patients")
+    List<PatientBean> patientList();
+
+    @GetMapping(value = "/Patient/lastname/{lastname}")
+    PatientBean getPatientByLastname(@PathVariable("lastname") String lastname);
 
     @GetMapping(value = "Patient/id/{id}")
-    Optional<Patient> getPatientById(@PathVariable Long id);
+    PatientBean getPatientById(@PathVariable Long id);
+
 
     @RequestMapping(value = "Assess", method = RequestMethod.GET)
-    String getAssessmentByLastname(@Valid @RequestParam("lastname") String lastname);
+    String getAssessmentByLastname(@RequestParam("lastname") String lastname);
 
     @GetMapping(value = "Assess/id/{patId}")
     String getAssessmentById(@Valid @PathVariable Long patId);
 
-    @GetMapping(value = "/PatHistory/id/{patId}")
-    PatientHistory getPatientByPatId(@PathVariable Long patId);
-
-    @GetMapping(value = "/PatHistory/lastname/{lastname}")
-    PatientHistory getPatientByPatId(@PathVariable String lastname);
 
     @PostMapping(value = "/PatHistory/add")
-    PatientHistory addPatientHistory(@Valid @RequestBody PatientHistory patientHistory);
+    PatientHistoryBean addPatientHistory(@RequestBody PatientHistoryBean patientHistory);
 
     @PostMapping(value = "/Patient/add")
-    Patient addPatient(@RequestBody Patient patient);
-
-//    @RequestMapping(value = "PatHistory/update", method = RequestMethod.PUT)
-//    PatientHistory updatePatientByLastname(@RequestParam("lastname") String lastname,
-//                                           @RequestBody PatientHistory patientToUpdate);
+    PatientBean addPatient(@RequestBody PatientBean patient);
 
     @PutMapping(value = "/PatHistory/update/{patId}")
-    PatientHistory updatePatientById(@PathVariable Long patId, @RequestBody PatientHistory patientToUpdate);
-
-//    @RequestMapping(value = "PatHistory/delete", method = RequestMethod.DELETE)
-//    PatientHistory deletePatientByLastname(@RequestParam("lastname") String lastname);
+    PatientHistoryBean updatePatientById(@PathVariable Long patId, @RequestBody PatientHistoryBean patientToUpdate);
 
     @DeleteMapping(value = "/PatHistory/delete/{patId}")
-    PatientHistory deletePatientById(@PathVariable Long patId);
-
-//    @RequestMapping(value = "Patient/update", method = RequestMethod.PUT)
-//    Patient updatePatientByLastname(@RequestParam("lastname") String lastname, @RequestBody Patient patientToUpdate);
-//
-//    @RequestMapping(value = "Patient/delete", method = RequestMethod.DELETE)
-//    Patient deletePatientByLastname(@RequestParam("lastname") String lastname);
+    PatientHistoryBean deletePatientById(@PathVariable Long patId);
 
     @PutMapping(value = "/Patient/update/{id}")
-    Patient updatePatient(@PathVariable Long id,Patient patientToUpdate);
+    PatientBean updatePatient(@PathVariable Long id, PatientBean patientToUpdate);
 
     @DeleteMapping(value = "/Patient/delete/{id}")
-    Patient deletePatient(@PathVariable Long id);
+    PatientBean deletePatient(@PathVariable Long id);
 
 }
