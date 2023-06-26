@@ -5,9 +5,9 @@
 </head>
 <body>
 <h1>Assessment</h1>
-<p>Patient ID: <span th:text="${patId}"></span></p>
-<p>Last Name: <span th:text="${lastname}"></span></p>
-<p>Notes: <span th:each="note : ${notes}" th:text="${note}"></span></p>
+<p>Patient ID: <span th:text="${patientBean.id}"></span></p>
+<p>Last Name: <span th:text="${patientBean.lastname}"></span></p>
+<p>Notes: <span th:each="note : ${listnotes}" th:text="${note.notes}"></span></p>
 <p>Assessment Result: <span th:text="${assessment}"></span></p>
 </body>
 </html>

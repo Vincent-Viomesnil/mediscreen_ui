@@ -14,11 +14,14 @@
         <div class="col-md-4 mx-auto mt-5 text-center">
 <!--            <p th:text="${patientAssessment}" class="font-weight-bold"></p>-->
 
-            <p>ID: <span th:text="${patientHistoryBean.patId}"></span></p>
-            <p>Last Name: <span th:text="${patientHistoryBean.lastname}"></span></p>
-            <p>Notes: <span th:each="note : ${patientHistory}" th:text="${note}"></span></p>
-
-            <form th:action="@{/assessment/id/{patId}(patId=${patientHistoryBean.patId})}" method="get">
+            <p>ID: <span th:text="${patientBean.id}"></span></p>
+            <p>Last Name: <span th:text="${patientBean.lastname}"></span></p>
+            <p>Notes:
+            <div th:each="note : ${listnotes}" class="col-md-4 my-1">
+                <p th:text="${note.notes}"></p>
+            </div>
+            </p>
+            <form th:action="@{/assessment/id/{id}(id=${patientBean.id})}" method="get">
                 <button type="submit">Perform Assessment</button>
             </form>
 

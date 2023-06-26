@@ -12,22 +12,22 @@ import java.util.List;
 public interface MicroserviceNotesProxy {
 
     @GetMapping(value = "/PatHistoryList")
-    List<PatientHistoryBean> patientHistoryList();
-
-    @GetMapping(value = "/PatHistory/id/{patId}")
-    PatientHistoryBean getPatientByPatId(@PathVariable Long patId);
+    List<PatientHistoryBean> patientList();
 
     @GetMapping(value = "/PatHistory/patid/{patId}")
-    List<PatientHistoryBean> getListNotesByPatId(@PathVariable Long patId);
+     List<PatientHistoryBean> getListNotesByPatId(@PathVariable Long patId);
+
+    @GetMapping(value = "/PatHistory/noteid/{noteId}")
+    PatientHistoryBean getNoteById(@PathVariable Long noteId);
 
     @PostMapping(value = "/PatHistory/add")
-    PatientHistoryBean addPatientHistory(@RequestBody PatientHistoryBean patientHistory);
+    PatientHistoryBean addNote(@RequestBody PatientHistoryBean patientHistory);
 
-    @PutMapping(value = "/PatHistory/update/{patId}")
-    PatientHistoryBean updatePatientById(@PathVariable Long patId, @RequestBody PatientHistoryBean patientToUpdate);
+    @PutMapping("/PatHistory/update/{id}")
+    PatientHistoryBean updateNoteById(@PathVariable Long id, @RequestBody PatientHistoryBean patientNoteToUpdate);
 
-    @DeleteMapping(value = "/PatHistory/delete/{patId}")
-    PatientHistoryBean deletePatientById(@PathVariable Long patId);
+    @DeleteMapping(value= "/PatHistory/delete/{noteId}")
+    void deleteNoteById(@PathVariable Long noteId);
 
 
 }

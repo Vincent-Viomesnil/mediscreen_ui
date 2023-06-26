@@ -33,7 +33,7 @@ public class FrontController {
 
     @GetMapping("/")
     public String homePH(Model model) {
-        List<PatientHistoryBean> patientList = getUniquePatientHistoryList();
+        List<PatientHistoryBean> patientList = microserviceNotesProxy.patientList();
         model.addAttribute("patientList", patientList);
         return "HomePH";
     }
@@ -61,7 +61,7 @@ public class FrontController {
 
     @GetMapping("/PatientHistoryList/Filter")
     public String getSheetPatient(Model model) {
-        List<PatientHistoryBean> patientList = microserviceNotesProxy.patientHistoryList();
+        List<PatientHistoryBean> patientList = microserviceNotesProxy.patientList();
 
         List<PatientHistoryBean> filteredList = patientList.stream()
                 .collect(Collectors.groupingBy(PatientHistoryBean::getPatId))
@@ -77,9 +77,9 @@ public class FrontController {
     public String getListNotesByPatId(@PathVariable Long patId, Model model, RedirectAttributes redir) {
         try {
             List<PatientHistoryBean> patientHistory = microserviceNotesProxy.getListNotesByPatId(patId);
-            PatientHistoryBean patientHistoryBean = microserviceNotesProxy.getPatientByPatId(patId);
-            model.addAttribute("patientHistory", patientHistory);
-            model.addAttribute("patientHistoryBean", patientHistoryBean);
+            PatientBean patientBean = microservicePatientProxy.getPatientById(patId);
+            model.addAttribute("listnotes", patientHistory);
+            model.addAttribute("patientBean", patientBean);
 
             return "Assess";
         } catch (FeignException e) {
@@ -92,20 +92,18 @@ public class FrontController {
     @GetMapping("/assessment/id/{patId}")
     public String getAssessmentById(@PathVariable Long patId, Model model, RedirectAttributes redir) {
         try {
-            // Récupérer les informations nécessaires pour l'assessment
-            PatientHistoryBean patientHistory = microserviceNotesProxy.getPatientByPatId(patId);
+            List<PatientHistoryBean> patientHistoryBean = microserviceNotesProxy.getListNotesByPatId(patId);
+            PatientBean patientBean = microservicePatientProxy.getPatientById(patId);
             String assessment = assessmentProxy.getAssessmentById(patId);
 
-            // Ajouter les données à l'objet Model
-            model.addAttribute("patId", patId);
-            model.addAttribute("lastname", patientHistory.getLastname());
-            model.addAttribute("notes", patientHistory.getNotes());
+            model.addAttribute("patientBean", patientBean);
+            model.addAttribute("listnotes", patientHistoryBean);
             model.addAttribute("assessment", assessment);
 
             return "AssessmentResult";
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
-            return "AddPatient";
+            return "HomePH";
         }
     }
 
@@ -150,11 +148,11 @@ public class FrontController {
     public String addPatientHistory(PatientHistoryBean patientHistory, Model model, RedirectAttributes redir) {
 
         try {
-            PatientHistoryBean patientAdded = microserviceNotesProxy.addPatientHistory(patientHistory);
+            PatientHistoryBean patientAdded = microserviceNotesProxy.addNote(patientHistory);
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
 
-            List<PatientHistoryBean> uniquePatientList = getUniquePatientHistoryList();
+            List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
 
 
             model.addAttribute("uniquePatientList", uniquePatientList);
@@ -165,10 +163,13 @@ public class FrontController {
         }
     }
 
-    @GetMapping("/PatHistory/update/{patId}")
-    public String updateForm(@PathVariable Long patId, Model model) {
-        PatientHistoryBean patientHistory = microserviceNotesProxy.getPatientByPatId(patId);
+    @GetMapping("/PatHistory/update/{id}")
+    public String updateForm(@PathVariable Long id, Model model) {
+        PatientHistoryBean patientHistory = microserviceNotesProxy.getNoteById(id);
+//      PatientHistoryBean patientHistory = new PatientHistoryBean();
+
         model.addAttribute("patientHistory", patientHistory);
+
         return "updatePH";
     }
 
@@ -195,13 +196,13 @@ public class FrontController {
             return "redirect:/PatientList";
         }
     }
-    @PostMapping(value = "/PatHistory/update/{patId}")
-    public String updatePatientHistory(@PathVariable Long patId, PatientHistoryBean patientToUpdate, Model model,
+    @PostMapping(value = "/PatHistory/update/{id}")
+    public String updatePatientHistory(@PathVariable Long id, PatientHistoryBean patientToUpdate, Model model,
                                        RedirectAttributes redir) {
         try {
-            PatientHistoryBean patientHistory = microserviceNotesProxy.updatePatientById(patId, patientToUpdate);
+            PatientHistoryBean patientHistory = microserviceNotesProxy.updateNoteById(id, patientToUpdate);
             model.addAttribute("patientHistory", patientHistory);
-            List<PatientHistoryBean> uniquePatientList = getUniquePatientHistoryList();
+            List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
 
             model.addAttribute("uniquePatientList", uniquePatientList);
             return "redirect:/";
@@ -222,19 +223,19 @@ public class FrontController {
 
     @PostMapping(value = "/PatHistory/delete/{id}")
     public String deletePatientById(@PathVariable Long id, Model model) {
-        microserviceNotesProxy.deletePatientById(id);
-        List<PatientHistoryBean> uniquePatientList = getUniquePatientHistoryList();
+        microserviceNotesProxy.deleteNoteById(id);
+        List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
         model.addAttribute("uniquePatientList", uniquePatientList);
         return "redirect:/";
     }
 
-    public List<PatientHistoryBean> getUniquePatientHistoryList() {
-        List<PatientHistoryBean> patientList = microserviceNotesProxy.patientHistoryList();
-        patientList.stream().collect(Collectors.groupingBy(PatientHistoryBean::getPatId))
-                .values().stream()
-                .filter(group -> group.size() > 1)
-                .map(group -> group.get(0).getPatId())
-                .collect(Collectors.toList());
-        return patientList;
-    }
+//    public List<PatientHistoryBean> getUniquePatientHistoryList() {
+//        List<PatientHistoryBean> patientList = microserviceNotesProxy.patientHistoryList();
+//        patientList.stream().collect(Collectors.groupingBy(PatientHistoryBean::getPatId))
+//                .values().stream()
+//                .filter(group -> group.size() > 1)
+//                .map(group -> group.get(0).getPatId())
+//                .collect(Collectors.toList());
+//        return patientList;
+//    }
 }
