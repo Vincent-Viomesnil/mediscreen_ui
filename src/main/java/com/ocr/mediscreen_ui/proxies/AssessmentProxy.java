@@ -13,4 +13,5 @@ public interface AssessmentProxy {
 
     @GetMapping(value = "assessment/id/{patId}")
     String getAssessmentById(@Valid @PathVariable Long patId);
+
 }

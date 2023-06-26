@@ -30,7 +30,7 @@
 
         <div th:each="patientHistory : ${filteredList}" class="col-md-4 my-1">
 
-            <a th:href="@{/PatHistory/note/{patId}(patId=${patientHistory.patId})}"  >
+            <a th:href="@{/PatHistory/patid/{patId}(patId=${patientHistory.patId})}"  >
 
                 <p th:text= "${patientHistory.lastname}"></p>
 

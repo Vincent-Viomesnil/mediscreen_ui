@@ -14,17 +14,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PatientBean {
 
-
     private Long id;
-
     private String firstname;
-
     private String lastname;
-
     private LocalDate birthdate;
-
     private String gender;
-
     private String address;
     private String phonenumber;
 

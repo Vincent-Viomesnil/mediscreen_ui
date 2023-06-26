@@ -17,6 +17,9 @@ public interface MicroserviceNotesProxy {
     @GetMapping(value = "/PatHistory/id/{patId}")
     PatientHistoryBean getPatientByPatId(@PathVariable Long patId);
 
+    @GetMapping(value = "/PatHistory/patid/{patId}")
+    List<PatientHistoryBean> getListNotesByPatId(@PathVariable Long patId);
+
     @PostMapping(value = "/PatHistory/add")
     PatientHistoryBean addPatientHistory(@RequestBody PatientHistoryBean patientHistory);
 

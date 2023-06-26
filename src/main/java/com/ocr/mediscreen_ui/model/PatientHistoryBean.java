@@ -14,7 +14,7 @@ import org.bson.types.ObjectId;
 public class PatientHistoryBean {
 
     private ObjectId _id;
-
+    private Long noteId;
     private Long patId;
     private String lastname;
     private String notes;

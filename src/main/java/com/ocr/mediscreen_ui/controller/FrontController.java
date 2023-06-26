@@ -1,5 +1,6 @@
 package com.ocr.mediscreen_ui.controller;
 
+import com.ocr.mediscreen_ui.exceptions.PatientNotFoundException;
 import com.ocr.mediscreen_ui.model.PatientBean;
 import com.ocr.mediscreen_ui.model.PatientHistoryBean;
 import com.ocr.mediscreen_ui.proxies.AssessmentProxy;
@@ -72,13 +73,14 @@ public class FrontController {
         return "SheetPatient";
     }
 
-
-
-    @GetMapping("/PatHistory/note/{patId}")
-    public String getPatientHistoryById(@PathVariable Long patId, Model model, RedirectAttributes redir) {
+    @GetMapping("/PatHistory/patid/{patId}")
+    public String getListNotesByPatId(@PathVariable Long patId, Model model, RedirectAttributes redir) {
         try {
-            PatientHistoryBean patientHistory = microserviceNotesProxy.getPatientByPatId(patId);
+            List<PatientHistoryBean> patientHistory = microserviceNotesProxy.getListNotesByPatId(patId);
+            PatientHistoryBean patientHistoryBean = microserviceNotesProxy.getPatientByPatId(patId);
             model.addAttribute("patientHistory", patientHistory);
+            model.addAttribute("patientHistoryBean", patientHistoryBean);
+
             return "Assess";
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
@@ -181,7 +183,7 @@ public class FrontController {
     public String updatePatient(@PathVariable Long id, PatientBean patientToUpdate, Model model,
                                 RedirectAttributes redir) {
         try {
-            PatientBean patient = microservicePatientProxy.updatePatient(id, patientToUpdate);
+            PatientBean patient = microservicePatientProxy.updatePatientById(id, patientToUpdate);
             model.addAttribute("patient", patient);
 
             List<PatientBean> uniquePatientList = microservicePatientProxy.patientList();
@@ -211,7 +213,7 @@ public class FrontController {
 
     @PostMapping(value = "/Patient/delete/{id}")
     public String deletePatient(@PathVariable Long id, Model model) {
-        microservicePatientProxy.deletePatient(id);
+        microservicePatientProxy.deletePatientById(id);
         List<PatientBean> uniquePatientList = microservicePatientProxy.patientList();
         model.addAttribute("uniquePatientList", uniquePatientList);
         return "redirect:/PatientList";

@@ -22,9 +22,9 @@ public interface MicroservicePatientProxy {
     PatientBean addPatient(PatientBean patient);
 
     @PutMapping(value = "/Patient/update/{id}")
-    PatientBean updatePatient(@PathVariable Long id, PatientBean patientToUpdate);
+    PatientBean updatePatientById(@PathVariable Long id, PatientBean patientToUpdate);
 
     @DeleteMapping(value = "/Patient/delete/{id}")
-    PatientBean deletePatient(@PathVariable Long id);
+    void deletePatientById(@PathVariable Long id);
 
 }
