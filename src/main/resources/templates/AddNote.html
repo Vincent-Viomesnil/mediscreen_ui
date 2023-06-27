@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Mediscreen</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
+
+</head>
+<body>
+<div class="container">
+    <h1>Application Mediscreen</h1>
+    <h2>Add New Note</h2>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <form action="#" th:action="@{/PatHistory/validate}" th:object="${patientHistory}" method="post" class="form-horizontal" style="width: 100%">
+
+                    <div class="form-group">
+                        <label for="patId">Patient ID</label>
+                        <select id="patId" name="patId" class="form-control">
+                            <option value="">Select Patient ID</option>
+                            <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.id}+ ' - ' +${patient.lastname}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <input type="text" id="notes" name="notes" class="form-control" placeholder="Enter notes">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Add Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+</body>
+</html>

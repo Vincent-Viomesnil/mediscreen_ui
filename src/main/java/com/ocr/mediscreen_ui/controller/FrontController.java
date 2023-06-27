@@ -1,6 +1,5 @@
 package com.ocr.mediscreen_ui.controller;
 
-import com.ocr.mediscreen_ui.exceptions.PatientNotFoundException;
 import com.ocr.mediscreen_ui.model.PatientBean;
 import com.ocr.mediscreen_ui.model.PatientHistoryBean;
 import com.ocr.mediscreen_ui.proxies.AssessmentProxy;
@@ -11,11 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -107,12 +104,16 @@ public class FrontController {
         }
     }
 
-    @GetMapping(value ="/PatHistory/add")
+    @GetMapping(value = "/PatHistory/add")
     public String getPatientHistory(Model model) {
         PatientHistoryBean patientHistory = new PatientHistoryBean();
+
+        List<PatientBean> patients = microservicePatientProxy.patientList();
+        model.addAttribute("patients", patients);
         model.addAttribute("patientHistory", patientHistory);
-        return "addPH";
+        return "AddNote";
     }
+
 
     @GetMapping(value="/Patient/add")
     public String getPatient(Model model) {
@@ -140,7 +141,7 @@ public class FrontController {
     }
 
 
-    @PostMapping(value = "/PatHistory/add")
+    @PostMapping(value = "/PatHistory/validate")
     public String addPatientHistory(PatientHistoryBean patientHistory, Model model, RedirectAttributes redir) {
 
         try {
@@ -148,6 +149,7 @@ public class FrontController {
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
 
+//            PatientBean patient = microservicePatientProxy.getPatientById(p)
             List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
             // où méthode public List<PatientHistoryBean> getUniquePatientHistoryList() {
 
@@ -155,24 +157,14 @@ public class FrontController {
             return "redirect:/";
     } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
-            return "addPH";
+            return "AddNote";
         }
-    }
-
-    @GetMapping("/PatHistory/update/{id}")
-    public String updateForm(@PathVariable Long id, Model model) {
-        PatientHistoryBean patientHistory = microserviceNotesProxy.getNoteById(id);
-//      PatientHistoryBean patientHistory = new PatientHistoryBean();
-
-        model.addAttribute("patientHistory", patientHistory);
-
-        return "updatePH";
     }
 
     @GetMapping("/Patient/update/{id}")
     public String updatePatientForm(@PathVariable Long id, Model model) {
         PatientBean patient = microservicePatientProxy.getPatientById(id);
-        List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
+        List<PatientBean> uniquePatientList = microservicePatientProxy.patientList();
 
         model.addAttribute("uniquePatientList", uniquePatientList);
         model.addAttribute("patient", patient);
@@ -194,6 +186,17 @@ public class FrontController {
             redir.addFlashAttribute("error", "Bad request during operation");
             return "redirect:/PatientList";
         }
+    }
+
+
+    @GetMapping("/PatHistory/update/{id}")
+    public String updateForm(@PathVariable Long id, Model model) {
+        PatientHistoryBean patientHistory = microserviceNotesProxy.getNoteById(id);
+//      PatientHistoryBean patientHistory = new PatientHistoryBean();
+
+        model.addAttribute("patientHistory", patientHistory);
+
+        return "updatePH";
     }
     @PostMapping(value = "/PatHistory/update/{id}")
     public String updatePatientHistory(@PathVariable Long id, PatientHistoryBean patientToUpdate, Model model,
