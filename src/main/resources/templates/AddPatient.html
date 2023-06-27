@@ -11,7 +11,7 @@
             <div class="card-body justify-content-center">
                 <h1>Application Mediscreen</h1>
                 <h2>Add New Patient</h2>
-                <form action="#" th:action="@{/Patient/add}" th:object="${pat}" method="post" class="form-horizontal" style="width: 100%">
+                <form action="#" th:action="@{/Patient/validate}" th:object="${patient}" method="post" class="form-horizontal" style="width: 100%">
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">Firstname</label>
                         <div class="col-sm-10">

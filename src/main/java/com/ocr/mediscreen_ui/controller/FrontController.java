@@ -122,8 +122,7 @@ public class FrontController {
         return "AddPatient";
     }
 
-
-    @PostMapping(value = "/Patient/add")
+    @PostMapping(value = "Patient/validate")
     public String addPatient(PatientBean patient, Model model, RedirectAttributes redir) {
         try {
             PatientBean patientAdded = microservicePatientProxy.addPatient(patient);
@@ -132,8 +131,6 @@ public class FrontController {
 
             List<PatientBean> uniquePatientList = microservicePatientProxy.patientList();
             model.addAttribute("uniquePatientList", uniquePatientList);
-
-            System.out.println("Patientadded");
 
             return "redirect:/PatientList";
         } catch (FeignException e) {
@@ -153,7 +150,7 @@ public class FrontController {
             redir.addFlashAttribute("success", "Patient successfully added");
 
             List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
-
+            // où méthode public List<PatientHistoryBean> getUniquePatientHistoryList() {
 
             model.addAttribute("uniquePatientList", uniquePatientList);
             return "redirect:/";
