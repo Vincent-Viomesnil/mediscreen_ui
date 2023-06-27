@@ -27,7 +27,6 @@ public class FrontController {
     @Autowired
     private MicroservicePatientProxy microservicePatientProxy;
 
-
     @GetMapping("/")
     public String homePH(Model model) {
         List<PatientHistoryBean> patientList = microserviceNotesProxy.patientList();
@@ -55,7 +54,6 @@ public class FrontController {
             return "Home";
         }
     }
-
     @GetMapping("/PatientHistoryList/Filter")
     public String getSheetPatient(Model model) {
         List<PatientHistoryBean> patientList = microserviceNotesProxy.patientList();
