@@ -5,10 +5,14 @@
 </head>
 <body>
 <h1>Assessment</h1>
-<p>Patient ID: <span th:text="${patientBean.id}"></span></p>
+<p>ID: <span th:text="${patientBean.id}"></span></p>
 <p>Last Name: <span th:text="${patientBean.lastname}"></span></p>
-<p>Notes: <span th:each="note : ${listnotes}" th:text="${note.notes}"></span></p>
-<p>Assessment Result: <span th:text="${assessment}"></span></p>
+<p>Notes:
+<div th:each="note : ${listnotes}" class="col-md-4 my-1">
+    <p th:text="${note.notes}"></p>
+</div>
+</p>
+<h4>Assessment Result: <span th:text="${assessment}"></span></h4>
 </body>
 </html>
 

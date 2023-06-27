@@ -11,7 +11,7 @@ import java.util.List;
 @FeignClient(name = "mediscreen-assess", url = "${mediscreen-assess.url}")
 public interface AssessmentProxy {
 
-    @GetMapping(value = "assessment/id/{patId}")
+    @GetMapping(value = "assessment/{patId}")
     String getAssessmentById(@Valid @PathVariable Long patId);
 
 }

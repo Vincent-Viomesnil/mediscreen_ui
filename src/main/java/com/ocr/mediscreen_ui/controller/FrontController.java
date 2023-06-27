@@ -89,7 +89,7 @@ public class FrontController {
     }
 
 
-    @GetMapping("/assessment/id/{patId}")
+    @GetMapping("/assessment/{patId}")
     public String getAssessmentById(@PathVariable Long patId, Model model, RedirectAttributes redir) {
         try {
             List<PatientHistoryBean> patientHistoryBean = microserviceNotesProxy.getListNotesByPatId(patId);
