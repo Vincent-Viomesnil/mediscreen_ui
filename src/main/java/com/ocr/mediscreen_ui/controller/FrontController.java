@@ -111,7 +111,6 @@ public class FrontController {
     public String getPatientHistory(Model model) {
         PatientHistoryBean patientHistory = new PatientHistoryBean();
         model.addAttribute("patientHistory", patientHistory);
-        log.info("The user want to add a new Patient: " +patientHistory);
         return "addPH";
     }
 
@@ -173,6 +172,9 @@ public class FrontController {
     @GetMapping("/Patient/update/{id}")
     public String updatePatientForm(@PathVariable Long id, Model model) {
         PatientBean patient = microservicePatientProxy.getPatientById(id);
+        List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
+
+        model.addAttribute("uniquePatientList", uniquePatientList);
         model.addAttribute("patient", patient);
         return "update";
     }
