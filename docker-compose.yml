@@ -1,60 +1,60 @@
 version: '3.9'
 
 services:
-  db_mysql:
-    container_name: db_mysql
+  dbpatient:
+    container_name: dbpatient
     build: ../mediscreen/database
+    environment:
+      MYSQL_DATABASE: bdd_mediscreen
+      MYSQL_ROOT_USERNAME: root
+      MYSQL_ROOT_PASSWORD: rootroot
     ports:
       - "13306:3306"
-
-  patient:
-    container_name: patient
-    build: ../mediscreen
-    ports:
-      - "881:8081"
-    depends_on:
-      - db_mysql
-    environment:
-      spring.datasource.url: "jdbc:mysql://db_mysql:3306/bdd_mediscreen"
+    restart: always
 
   mongodb:
     container_name: mongodb
     build: ../mediscreen_mdb/database
     ports:
       - "2727:27017"
+    restart: always
 
-  patient_notes:
-    container_name: patient_notes
-    build: ../mediscreen_mdb
+  patient:
+    container_name: patient
+    build: ../mediscreen
+    environment:
+      spring.datasource.username: "root"
+      spring.datasource.password: "rootroot"
+      spring.datasource.url: "jdbc:mysql://dbpatient:3306/bdd_mediscreen"
     ports:
-      - "882:8082"
+      - "8081:8081"
     depends_on:
-      - mongodb
+      - dbpatient
+    restart: always
+
+  patientnotes:
+    container_name: patientnotes
+    build: ../mediscreen_mdb
     environment:
       spring.data.mongodb.uri: "mongodb://mongodb:27017/MediscreenDatabase"
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongodb
+    restart: always
 
-  patient_assess:
-    container_name: patient_assess
+  patientassess:
+    container_name: patientassess
     build: ../mediscreen_assess
+    environment:
+      mediscreen.url: "http://patient:8081"
+      mediscreen-mdb.url: "http://patientnotes:8082"
     ports:
-      - "880:8080"
+      - "8080:8080"
     depends_on:
       - patient
-      - patient_notes
-    environment:
-      clients.patient: "http://patient:8081"
-      clients.patient_notes: "http://patient_notes:8082"
+      - patientnotes
+    restart: always
 
-  patient_ui:
-    container_name: patient_ui
-    build: ../mediscreen_ui
-    ports:
-      - "890:8090"
-    depends_on:
-      - patient
-      - patient_notes
-      - patient_assess
-    environment:
-      clients.patient: "http://patient:8081"
-      clients.patient_notes: "http://patient_notes:8082"
-      clients.patient_assess: "http://patient_assess:8090"
+
+
