@@ -17,10 +17,15 @@
 
                     <div class="form-group">
                         <label for="patId">Patient ID</label>
-                        <select id="patId" name="patId" class="form-control">
+                        <select id="patId" name="patId" class="form-control" onchange="updateLastName()">
                             <option value="">Select Patient ID</option>
-                            <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.id}+ ' - ' +${patient.lastname}"></option>
+                            <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.id} + ' - ' + ${patient.lastname}" th:data-lastname="${patient.lastname}"></option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastname">Lastname</label>
+                        <input type="text" id="lastname" name="lastname" class="form-control" readonly>
                     </div>
 
                     <div class="form-group">
@@ -38,5 +43,21 @@
 </div>
 
 <script type="text/javascript" src="webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+<script>
+    function updateLastName() {
+        var patId = document.getElementById("patId").value;
+        var lastnameField = document.getElementById("lastname");
+        var selectedOption = document.querySelector("#patId option:checked");
+        var lastname = selectedOption.getAttribute("data-lastname");
+
+        if (patId === "") {
+            lastnameField.value = "";
+            lastnameField.readOnly = true;
+        } else {
+            lastnameField.value = lastname;
+            lastnameField.readOnly = false;
+        }
+    }
+</script>
 </body>
 </html>
