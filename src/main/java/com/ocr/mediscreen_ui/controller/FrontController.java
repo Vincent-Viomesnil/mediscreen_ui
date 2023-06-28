@@ -48,7 +48,7 @@ public class FrontController {
             PatientBean patient = microservicePatientProxy.getPatientById(id);
             model.addAttribute("patient", patient);
             redir.addFlashAttribute("success", "Patient successfully added");
-            return "SheetPatient";
+            return "Assess";
 
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
@@ -67,7 +67,7 @@ public class FrontController {
                 .collect(Collectors.toList());
 
         model.addAttribute("filteredList", filteredList);
-        return "SheetPatient";
+        return "Assess";
     }
 
     @GetMapping("/PatHistory/patid/{patId}")
@@ -79,7 +79,7 @@ public class FrontController {
         model.addAttribute("patientHistoryList", patientHistoryList);
         model.addAttribute("assessmentResult", assessmentResult);
 
-        return "Assess";
+        return "PatientDetails";
             } catch(FeignException e){
         redir.addFlashAttribute("error", e.status() + " during operation");
         return "redirect:/";
@@ -152,7 +152,7 @@ public class FrontController {
 
         model.addAttribute("uniquePatientList", uniquePatientList);
         model.addAttribute("patient", patient);
-        return "update";
+        return "Update";
     }
 
     @PostMapping(value = "/Patient/update/{id}")
@@ -180,7 +180,7 @@ public class FrontController {
 
         model.addAttribute("patientHistory", patientHistory);
 
-        return "updatePH";
+        return "UpdatePH";
     }
     @PostMapping(value = "/PatHistory/update/{id}")
     public String updatePatientHistory(@PathVariable Long id, PatientHistoryBean patientToUpdate, Model model,

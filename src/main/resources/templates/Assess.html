@@ -1,23 +1,18 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title> Mediscreen - Patient Details</title>
+    <title>Mediscreen</title>
     <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
 </head>
 <body>
 
 <div class="container">
-    <h1>Mediscreen - Patient Details</h1>
+    <h1>Mediscreen - Assess</h1>
     <div class="row">
-        <div class="col-md-6">
-            <h3>Notes:</h3>
-            <ul>
-                <li th:each="note : ${patientHistoryList}" th:text="${note.notes}"></li>
-            </ul>
-        </div>
-        <div class="col-md-6">
-            <h3>Assessment Result:</h3>
-            <p th:text="${assessmentResult}"></p>
+        <div th:each="patientHistory : ${filteredList}" class="col-md-4 my-1">
+            <a th:href="@{/PatHistory/patid/{patId}(patId=${patientHistory.patId})}">
+                <p th:text="${patientHistory.lastname}"></p>
+            </a>
         </div>
     </div>
 </div>
