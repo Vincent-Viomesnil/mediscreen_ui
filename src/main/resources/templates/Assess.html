@@ -1,32 +1,28 @@
 <!DOCTYPE HTML>
-
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Mediscreen</title>
-
+    <title> Mediscreen - Patient Details</title>
     <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
-
 </head>
 <body>
+
 <div class="container">
-    <h1 class="text-center">Patient History</h1>
+    <h1>Mediscreen - Patient Details</h1>
     <div class="row">
-        <div class="col-md-4 mx-auto mt-5 text-center">
-<!--            <p th:text="${patientAssessment}" class="font-weight-bold"></p>-->
-
-            <p>ID: <span th:text="${patientBean.id}"></span></p>
-            <p>Last Name: <span th:text="${patientBean.lastname}"></span></p>
-            <p>Notes:
-            <div th:each="note : ${listnotes}" class="col-md-4 my-1">
-                <p th:text="${note.notes}"></p>
-            </div>
-            </p>
-
-            <h4>Assessment Result: <span th:text="${assessment}"></span></h4>
-
+        <div class="col-md-6">
+            <h3>Notes:</h3>
+            <ul>
+                <li th:each="note : ${patientHistoryList}" th:text="${note.notes}"></li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3>Assessment Result:</h3>
+            <p th:text="${assessmentResult}"></p>
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

@@ -41,8 +41,9 @@ public class FrontController {
         model.addAttribute("uniquePatientList", uniquePatientList);
         return "Home";
     }
+
     @GetMapping(value = "/Patient/id/{id}")
-    public String getPatientById(@PathVariable Long id, Model model,RedirectAttributes redir) {
+    public String getPatientById(@PathVariable Long id, Model model, RedirectAttributes redir) {
         try {
             PatientBean patient = microservicePatientProxy.getPatientById(id);
             model.addAttribute("patient", patient);
@@ -54,6 +55,7 @@ public class FrontController {
             return "Home";
         }
     }
+
     @GetMapping("/PatientHistoryList/Filter")
     public String getSheetPatient(Model model) {
         List<PatientHistoryBean> patientList = microserviceNotesProxy.patientList();
@@ -69,19 +71,20 @@ public class FrontController {
     }
 
     @GetMapping("/PatHistory/patid/{patId}")
-    public String getListNotesByPatId(@PathVariable Long patId, Model model, RedirectAttributes redir) {
+    public String getPatientDetails(@PathVariable Long patId, Model model, RedirectAttributes redir) {
         try {
-            List<PatientHistoryBean> patientHistory = microserviceNotesProxy.getListNotesByPatId(patId);
-            PatientBean patientBean = microservicePatientProxy.getPatientById(patId);
-            model.addAttribute("listnotes", patientHistory);
-            model.addAttribute("patientBean", patientBean);
-            String assessment = assessmentProxy.getAssessmentById(patId);
-            model.addAttribute("assessment", assessment);
-            return "Assess";
-        } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + " during operation");
-            return  "redirect:/";
+        List<PatientHistoryBean> patientHistoryList = microserviceNotesProxy.getListNotesByPatId(patId);
+        String assessmentResult = assessmentProxy.getAssessmentById(patId);
+
+        model.addAttribute("patientHistoryList", patientHistoryList);
+        model.addAttribute("assessmentResult", assessmentResult);
+
+        return "Assess";
+            } catch(FeignException e){
+        redir.addFlashAttribute("error", e.status() + " during operation");
+        return "redirect:/";
         }
+
     }
 
 
