@@ -75,32 +75,15 @@ public class FrontController {
             PatientBean patientBean = microservicePatientProxy.getPatientById(patId);
             model.addAttribute("listnotes", patientHistory);
             model.addAttribute("patientBean", patientBean);
-
+            String assessment = assessmentProxy.getAssessmentById(patId);
+            model.addAttribute("assessment", assessment);
             return "Assess";
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
-            return "HomePH";
+            return  "redirect:/";
         }
     }
 
-
-    @GetMapping("/assessment/{patId}")
-    public String getAssessmentById(@PathVariable Long patId, Model model, RedirectAttributes redir) {
-        try {
-            List<PatientHistoryBean> patientHistoryBean = microserviceNotesProxy.getListNotesByPatId(patId);
-            PatientBean patientBean = microservicePatientProxy.getPatientById(patId);
-            String assessment = assessmentProxy.getAssessmentById(patId);
-
-            model.addAttribute("patientBean", patientBean);
-            model.addAttribute("listnotes", patientHistoryBean);
-            model.addAttribute("assessment", assessment);
-
-            return "AssessmentResult";
-        } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + " during operation");
-            return "HomePH";
-        }
-    }
 
     @GetMapping(value = "/PatHistory/add")
     public String getPatientHistory(Model model) {

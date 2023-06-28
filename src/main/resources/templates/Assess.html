@@ -21,9 +21,8 @@
                 <p th:text="${note.notes}"></p>
             </div>
             </p>
-            <form th:action="@{/assessment/{id}(id=${patientBean.id})}" method="get">
-                <button type="submit">Perform Assessment</button>
-            </form>
+
+            <h4>Assessment Result: <span th:text="${assessment}"></span></h4>
 
         </div>
     </div>
