@@ -106,7 +106,7 @@ public class FrontController {
         return "AddPatient";
     }
 
-    @PostMapping(value = "Patient/validate")
+    @PostMapping(value = "/Patient/validate")
     public String addPatient(PatientBean patient, Model model, RedirectAttributes redir) {
         try {
             PatientBean patientAdded = microservicePatientProxy.addPatient(patient);
