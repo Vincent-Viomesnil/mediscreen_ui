@@ -55,13 +55,14 @@ services:
       - patient
       - patientnotes
     restart: always
+
   patientui:
     container_name: patientui
     build: ../mediscreen_ui
     environment:
       mediscreen.url: "http://patient:8081"
       mediscreen-mdb.url: "http://patientnotes:8082"
-      mediscreen-assess.url: "http://patientui:8090"
+      mediscreen-assess.url: "http://patientassess:8080"
     ports:
       - "8090:8090"
     depends_on:
