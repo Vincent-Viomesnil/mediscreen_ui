@@ -1,5 +1,6 @@
 package com.ocr.mediscreen_ui.controller;
 
+import com.ocr.mediscreen_ui.exceptions.PatientNotFoundException;
 import com.ocr.mediscreen_ui.model.PatientBean;
 import com.ocr.mediscreen_ui.model.PatientHistoryBean;
 import com.ocr.mediscreen_ui.proxies.AssessmentProxy;
@@ -50,6 +51,8 @@ public class FrontController {
             redir.addFlashAttribute("success", "Patient successfully added");
             return "Assess";
 
+        } catch (FeignException.BadRequest e) {
+            throw new PatientNotFoundException("Request Incorrect");
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
             return "Home";
@@ -80,6 +83,8 @@ public class FrontController {
         model.addAttribute("assessmentResult", assessmentResult);
 
         return "PatientDetails";
+        } catch (FeignException.BadRequest e) {
+            throw new PatientNotFoundException("Request Incorrect");
             } catch(FeignException e){
         redir.addFlashAttribute("error", e.status() + " during operation");
         return "redirect:/";
@@ -133,9 +138,7 @@ public class FrontController {
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
 
-//            PatientBean patient = microservicePatientProxy.getPatientById(p)
             List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
-            // où méthode public List<PatientHistoryBean> getUniquePatientHistoryList() {
 
             model.addAttribute("uniquePatientList", uniquePatientList);
             return "redirect:/";
@@ -215,13 +218,4 @@ public class FrontController {
         return "redirect:/";
     }
 
-//    public List<PatientHistoryBean> getUniquePatientHistoryList() {
-//        List<PatientHistoryBean> patientList = microserviceNotesProxy.patientHistoryList();
-//        patientList.stream().collect(Collectors.groupingBy(PatientHistoryBean::getPatId))
-//                .values().stream()
-//                .filter(group -> group.size() > 1)
-//                .map(group -> group.get(0).getPatId())
-//                .collect(Collectors.toList());
-//        return patientList;
-//    }
 }
