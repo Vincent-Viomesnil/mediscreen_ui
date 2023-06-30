@@ -99,6 +99,7 @@ public class FrontController {
         PatientHistoryBean patientHistory = new PatientHistoryBean();
 
         List<PatientBean> patients = microservicePatientProxy.patientList();
+        model.addAttribute("patientBean", new PatientBean());
         model.addAttribute("patients", patients);
         model.addAttribute("patientHistory", patientHistory);
         return "AddNote";
@@ -109,6 +110,7 @@ public class FrontController {
     public String getPatient(Model model) {
         PatientBean patient = new PatientBean();
         model.addAttribute("patient", patient);
+
         return "AddPatient";
     }
 
@@ -156,11 +158,12 @@ public class FrontController {
 
         try {
             PatientHistoryBean patientAdded = microserviceNotesProxy.addNote(patientHistory);
+            PatientBean patientBean = microservicePatientProxy.getPatientById(patientHistory.getPatId());
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
 
             List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
-
+            model.addAttribute("patientBean", patientBean);
             model.addAttribute("uniquePatientList", uniquePatientList);
             return "redirect:/";
     } catch (FeignException e) {
