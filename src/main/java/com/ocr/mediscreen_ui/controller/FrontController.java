@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -112,8 +113,22 @@ public class FrontController {
     }
 
     @PostMapping(value = "/Patient/validate")
-    public String addPatient(PatientBean patient, Model model, RedirectAttributes redir) {
+    public String addPatient(@ModelAttribute("patient") PatientBean patient, Model model, RedirectAttributes redir) {
         try {
+            PatientBean patientExisting = new PatientBean();
+            String firstname = patientExisting.getFirstname();
+            String lastname = patientExisting.getLastname();
+            LocalDate birthdate = patientExisting.getBirthdate();
+
+            if (patient.getFirstname().equals(firstname)
+                    && patient.getLastname().equals(lastname)
+                    && patient.getBirthdate().equals(birthdate)) {
+
+                redir.addFlashAttribute("error", "The patient " + firstname + " " + lastname + " already exists");
+                System.out.println("FeignException");
+                return "AddPatient";
+            }
+
             PatientBean patientAdded = microservicePatientProxy.addPatient(patient);
             model.addAttribute("patientAdded", patientAdded);
             redir.addFlashAttribute("success", "Patient successfully added");
@@ -122,10 +137,16 @@ public class FrontController {
             model.addAttribute("uniquePatientList", uniquePatientList);
 
             return "redirect:/PatientList";
+
         } catch (FeignException e) {
-            redir.addFlashAttribute("error", e.status() + " during operation");
-            System.out.println("FeignException");
-            return "AddPatient";
+            redir.addFlashAttribute("error", "The patient already exists");
+            System.out.println("FE");
+
+            List<PatientBean> uniquePatientList = microservicePatientProxy.patientList();
+            model.addAttribute("uniquePatientList", uniquePatientList);
+
+            return "redirect:/PatientList";
+
         }
     }
 

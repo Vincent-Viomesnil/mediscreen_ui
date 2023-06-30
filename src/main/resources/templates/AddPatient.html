@@ -5,6 +5,20 @@
     <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
 </head>
 <body>
+
+<div th:if="${success}" th:class="${alert}">
+    <div class="alert alert-success">
+        <strong>Patient succcessfully Added</strong>
+    </div>
+</div>
+
+<div th:if="${error}" th:class="${alert}">
+    <div class="alert alert-danger">
+        <strong>Operation failed</strong>
+    </div>
+</div>
+
+
 <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-lg-12">
