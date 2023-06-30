@@ -4,10 +4,6 @@ services:
   dbpatient:
     container_name: dbpatient
     build: ../mediscreen/database
-    environment:
-      MYSQL_DATABASE: bdd_mediscreen
-      MYSQL_ROOT_USERNAME: root
-      MYSQL_ROOT_PASSWORD: rootroot
     ports:
       - "13306:3306"
     restart: always
@@ -23,8 +19,6 @@ services:
     container_name: patient
     build: ../mediscreen
     environment:
-      spring.datasource.username: "root"
-      spring.datasource.password: "rootroot"
       spring.datasource.url: "jdbc:mysql://dbpatient:3306/bdd_mediscreen"
     ports:
       - "8081:8081"
