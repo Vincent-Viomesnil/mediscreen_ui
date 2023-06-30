@@ -7,6 +7,19 @@
 </head>
 <body>
 
+
+<div th:if="${success}" th:class="${alert}">
+    <div class="alert alert-success">
+        <strong>Note succcessfully Added</strong>
+    </div>
+</div>
+
+<div th:if="${error}" th:class="${alert}">
+    <div class="alert alert-danger">
+        <strong>Operation failed</strong>
+    </div>
+</div>
+
 <div class="container">
     <h1>Mediscreen</h1>
     <h2>Add New Note</h2>

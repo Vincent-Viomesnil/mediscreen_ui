@@ -1,201 +1,331 @@
-//package com.ocr.mediscreen_ui.controller;
-//
-//import com.ocr.mediscreen_ui.model.PatientBean;
-//import com.ocr.mediscreen_ui.model.PatientHistoryBean;
-//import com.ocr.mediscreen_ui.proxies.FrontProxy;
-//import feign.FeignException;
-//import feign.Request;
-//import feign.Response;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.MockitoAnnotations;
-//import org.springframework.ui.Model;
-//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-//
-//import java.util.*;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.mockito.Mockito.*;
-//
-//class FrontControllerTest {
-//
-//    @Mock
-//    private FrontProxy frontProxy;
-//
-//    @Mock
-//    private Model model;
-//
-//    @Mock
-//    private RedirectAttributes redirectAttributes;
-//
-//    @InjectMocks
-//    private FrontController frontController;
-//
-//    @BeforeEach
-//    void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//        frontController = new FrontController(frontProxy);
-//    }
-//
-//    @Test
-//    void testHomePH() {
-//        List<PatientHistoryBean> patientList = frontProxy.patientHistoryList();
-//        when(frontProxy.patientHistoryList()).thenReturn(patientList);
-//
-//        frontController.homePH(model);
-//
-//        verify(model).addAttribute("patientList", patientList);
-//    }
-//
-//    @Test
-//    void testGetPatientHistoryById() {
-//        Long patId = 1L;
-//        PatientHistoryBean patientHistory = new PatientHistoryBean();
-//        when(frontProxy.getPatientByPatId(patId)).thenReturn(patientHistory);
-//
-//       String result = frontController.getPatientHistoryById(patId, model, redirectAttributes);
-//
-//
-//        assertEquals("Assess", result);
-//        verify(frontProxy, times(1)).getPatientByPatId(patId);
-//        verify(model, times(1)).addAttribute("patientNotes", patientHistory);
-//
-//    }
-//
-//    @Test
-//    void testAddPatientHistory() {
-//        PatientHistoryBean patientHistory = new PatientHistoryBean();
-//        when(frontProxy.addPatientHistory(patientHistory)).thenReturn(patientHistory);
-//
-//        frontController.addPatientHistory(patientHistory, model, redirectAttributes);
-//
-//        verify(model).addAttribute("patientAdded", patientHistory);
-//        verify(redirectAttributes).addFlashAttribute("success", "Patient successfully added");
-//        verify(frontProxy).patientHistoryList();
-//
-//    }
-//
-//    @Test
-//    void testGetPatientById() {
-//        Long id = 1L;
-//        Optional<PatientBean> patient = Optional.of(new PatientBean());
-//        when(frontProxy.getPatientById(id)).thenReturn(patient);
-//
-//        String result = frontController.getPatientById(id, model, redirectAttributes);
-//
-//        assertEquals("SheetPatient", result);
-//        verify(frontProxy, times(1)).getPatientById(id);
-//        verify(model, times(1)).addAttribute("patient", patient);
-//        verify(redirectAttributes, times(1)).addFlashAttribute("success", "Patient successfully added");
-//    }
-//
-//    @Test
-//    void testGetPatientByIdFailed() {
-//        Long id = 1L;
-//        when(frontProxy.getPatientById(id)).thenThrow(FeignException.class);
-//
-//        String result = frontController.getPatientById(id, model, redirectAttributes);
-//
-//        assertEquals("Home", result);
-//        verify(frontProxy, times(1)).getPatientById(id);
-//    }
-//
-//
-//    @Test
-//    void testGetAssessPatientById() {
-//        Long patId = 1L;
-//        String assessment = "Some assessment";
-//        when(frontProxy.getAssessmentById(patId)).thenReturn(assessment);
-//
-//        String result = frontController.getAssessPatientById(patId, model);
-//
-//        assertEquals("redirect:/Assess/result/" + patId + "?assessment=" + assessment, result);
-//        verify(frontProxy, times(1)).getAssessmentById(patId);
-//    }
-//
-//    @Test
-//    void testGetAssessmentResult() {
-//        Long patId = 1L;
-//        String assessment = "Some assessment";
-//
-//        String result = frontController.getAssessmentResult(patId, assessment, model);
-//
-//        assertEquals("AssessmentResult", result);
-//        verify(model, times(1)).addAttribute("patId", patId);
-//        verify(model, times(1)).addAttribute("assessment", assessment);
-//    }
-//
-//    @Test
-//    void testUpdateForm() {
-//        Long patId = 1L;
-//        PatientHistoryBean patientHistory = new PatientHistoryBean();
-//        when(frontProxy.getPatientByPatId(patId)).thenReturn(patientHistory);
-//
-//        String result = frontController.updateForm(patId, model);
-//
-//        assertEquals("updatePH", result);
-//        verify(frontProxy, times(1)).getPatientByPatId(patId);
-//        verify(model, times(1)).addAttribute("patientHistory", patientHistory);
-//    }
-//
-//    @Test
-//    void testUpdatePatientHistory() {
-//
-//        Long patId = 1L;
-//        PatientHistoryBean patientToUpdate = new PatientHistoryBean();
-//        PatientHistoryBean updatedPatientHistory = new PatientHistoryBean();
-//        List<PatientHistoryBean> uniquePatientList = new ArrayList<>();
-//        when(frontProxy.updatePatientById(patId, patientToUpdate)).thenReturn(updatedPatientHistory);
-//        when(frontController.getUniquePatientHistoryList()).thenReturn(uniquePatientList);
-//
-//        String result = frontController.updatePatientHistory(patId, patientToUpdate, model, redirectAttributes);
-//
-//        assertEquals("redirect:/", result);
-//        verify(frontProxy, times(1)).updatePatientById(patId, patientToUpdate);
-//        verify(model, times(1)).addAttribute("patientHistory", updatedPatientHistory);
-//        verify(model, times(1)).addAttribute("uniquePatientList", uniquePatientList);
-//    }
-//
-//    @Test
-//    void testUpdatePatientHistoryFailed() {
-//        Long patId = 1L;
-//        PatientHistoryBean patientToUpdate = new PatientHistoryBean();
-//        String message = "Invalid request";
-//        Request request = Request.create(Request.HttpMethod.GET, "/api/endpoint", Collections.emptyMap(), (byte[]) null, null);
-//        Response response = Response.builder()
-//                .status(400)
-//                .headers(Collections.emptyMap())
-//                .reason("Bad Request")
-//                .request(request)
-//                .build();
-//        Throwable cause = null;
-//
-//        FeignException.BadRequest exception = new FeignException.BadRequest(message, request, response.request().body(),null);
-//
-//        when(frontProxy.updatePatientById(patId, patientToUpdate)).thenThrow(exception);
-//
-//        // Act
-//        String result = frontController.updatePatientHistory(patId, patientToUpdate, model, redirectAttributes);
-//
-//        // Assert
-//        assertEquals("Home", result);
-//        verify(frontProxy, times(1)).updatePatientById(patId, patientToUpdate);
-//        verify(redirectAttributes, times(1)).addFlashAttribute("error", "400 during operation");
-//    }
-//
-//    @Test
-//    void testDeletePatient() {
-//        Long id = 1L;
-//        List<PatientHistoryBean> uniquePatientList = new ArrayList<>();
-//
-//        String result = frontController.deletePatient(id, model);
-//
-//        assertEquals("redirect:/", result);
-//        verify(frontProxy, times(1)).deletePatientById(id);
-//        verify(model, times(1)).addAttribute(eq("uniquePatientList"), anyList());
-//    }
-//
-//
-//}
+package com.ocr.mediscreen_ui.controller;
+
+import com.ocr.mediscreen_ui.exceptions.PatientNotFoundException;
+import com.ocr.mediscreen_ui.model.PatientBean;
+import com.ocr.mediscreen_ui.model.PatientHistoryBean;
+import com.ocr.mediscreen_ui.proxies.AssessmentProxy;
+import com.ocr.mediscreen_ui.proxies.MicroserviceNotesProxy;
+import com.ocr.mediscreen_ui.proxies.MicroservicePatientProxy;
+import feign.FeignException;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringJUnitConfig
+@WebMvcTest(FrontController.class)
+public class FrontControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private MicroserviceNotesProxy microserviceNotesProxy;
+
+    @MockBean
+    private AssessmentProxy assessmentProxy;
+
+    @MockBean
+    private MicroservicePatientProxy microservicePatientProxy;
+
+    @Test
+    public void testHomePH() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("HomePH"))
+                .andExpect(model().attributeExists("patientList"));
+    }
+
+    @Test
+    public void testHome() throws Exception {
+        mockMvc.perform(get("/PatientList"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("Home"))
+                .andExpect(model().attributeExists("uniquePatientList"));
+    }
+
+    @Test
+    public void testGetPatientById() throws Exception {
+        long patientId = 1;
+        PatientBean patientBean = new PatientBean();
+        patientBean.setId(patientId);
+
+        given(microservicePatientProxy.getPatientById(patientId)).willReturn(patientBean);
+
+        mockMvc.perform(get("/Patient/id/{id}", patientId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("Assess"))
+                .andExpect(model().attributeExists("patient"))
+                .andReturn().getResponse();
+    }
+
+    @Test
+    public void testGetPatientById_PatientNotFoundException() throws Exception {
+        long patientId = 1;
+
+        given(microservicePatientProxy.getPatientById(patientId)).willThrow(PatientNotFoundException.class);
+
+        mockMvc.perform(get("/Patient/id/{id}", patientId))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void testGetPatientById_FeignException() throws Exception {
+        long patientId = 1;
+
+        given(microservicePatientProxy.getPatientById(patientId)).willThrow(FeignException.class);
+
+        mockMvc.perform(get("/Patient/id/{id}", patientId))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn().getResponse();
+    }
+
+    @Test
+    public void testGetPatientHistory() throws Exception {
+        List<PatientBean> patients = new ArrayList<>();
+        given(microservicePatientProxy.patientList()).willReturn(patients);
+
+        mockMvc.perform(get("/PatHistory/add"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("AddNote"))
+                .andExpect(model().attributeExists("patients"))
+                .andExpect(model().attribute("patients", patients))
+                .andExpect(model().attributeExists("patientHistory"));
+    }
+
+    @Test
+    public void testGetPatient() throws Exception {
+        mockMvc.perform(get("/Patient/add"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("AddPatient"))
+                .andExpect(model().attributeExists("patient"))
+                .andExpect(model().attribute("patient", instanceOf(PatientBean.class)));
+    }
+
+    @Test
+    public void testAddPatient() throws Exception {
+        PatientBean patient = new PatientBean();
+        patient.setFirstname("John");
+        patient.setLastname("Doe");
+        patient.setBirthdate(LocalDate.of(1990, 1, 1));
+
+        given(microservicePatientProxy.getPatientById(anyLong())).willReturn(patient);
+
+        mockMvc.perform(post("/Patient/validate")
+                        .flashAttr("patient", patient)
+                        .sessionAttr("patientExisting", patient))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/PatientList"))
+                .andExpect(flash().attributeExists("success"));
+    }
+
+    @Test
+    public void testAddPatient_PatientAlreadyExists() throws Exception {
+        PatientBean patient = new PatientBean();
+        patient.setFirstname("John");
+        patient.setLastname("Doe");
+        patient.setBirthdate(LocalDate.of(1990, 1, 1));
+
+        PatientBean patientExisting = new PatientBean();
+        patientExisting.setFirstname("John");
+        patientExisting.setLastname("Doe");
+        patientExisting.setBirthdate(LocalDate.of(1990, 1, 1));
+
+        given(microservicePatientProxy.getPatientById(anyLong())).willReturn(patientExisting);
+
+        mockMvc.perform(post("/Patient/validate")
+                        .flashAttr("patient", patient)
+                        .sessionAttr("patientExisting", patientExisting))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/PatientList"));
+    }
+
+    @Test
+    public void testAddPatientHistory() throws Exception {
+        PatientHistoryBean patientHistory = new PatientHistoryBean();
+
+        given(microserviceNotesProxy.addNote(patientHistory)).willReturn(patientHistory);
+
+        mockMvc.perform(post("/PatHistory/validate")
+                        .flashAttr("patientHistory", patientHistory))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    public void testUpdatePatientForm() throws Exception {
+        long patientId = 1;
+        PatientBean patient = new PatientBean();
+        List<PatientBean> uniquePatientList = new ArrayList<>();
+
+        given(microservicePatientProxy.getPatientById(patientId)).willReturn(patient);
+        given(microservicePatientProxy.patientList()).willReturn(uniquePatientList);
+
+        mockMvc.perform(get("/Patient/update/{id}", patientId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("Update"))
+                .andExpect(model().attributeExists("patient"))
+                .andExpect(model().attribute("patient", patient))
+                .andExpect(model().attributeExists("uniquePatientList"))
+                .andExpect(model().attribute("uniquePatientList", uniquePatientList));
+    }
+
+    @Test
+    public void testUpdatePatient_Success() throws Exception {
+        long patientId = 1;
+        PatientBean patientToUpdate = new PatientBean();
+        PatientBean patientUpdated = new PatientBean();
+        List<PatientBean> uniquePatientList = new ArrayList<>();
+
+        given(microservicePatientProxy.updatePatientById(patientId, patientToUpdate)).willReturn(patientUpdated);
+        given(microservicePatientProxy.patientList()).willReturn(uniquePatientList);
+
+        mockMvc.perform(post("/Patient/update/{id}", patientId)
+                        .flashAttr("patientToUpdate", patientToUpdate))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/PatientList"));
+    }
+
+    @Test
+    public void testUpdatePatient_BadRequest() throws Exception {
+        long patientId = 1;
+        PatientBean patientToUpdate = new PatientBean();
+
+        given(microservicePatientProxy.updatePatientById(patientId, patientToUpdate)).willThrow(FeignException.BadRequest.class);
+
+        mockMvc.perform(post("/Patient/update/{id}", patientId)
+                        .flashAttr("patientToUpdate", patientToUpdate))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/PatientList"));
+    }
+
+    @Test
+    public void testUpdateForm() throws Exception {
+        long noteId = 1;
+        PatientHistoryBean patientHistory = new PatientHistoryBean();
+
+        given(microserviceNotesProxy.getNoteById(noteId)).willReturn(patientHistory);
+
+        mockMvc.perform(get("/PatHistory/update/{id}", noteId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("UpdatePH"))
+                .andExpect(model().attributeExists("patientHistory"))
+                .andExpect(model().attribute("patientHistory", patientHistory));
+    }
+
+    @Test
+    public void testUpdatePatientHistory_Success() throws Exception {
+        long noteId = 1;
+        PatientHistoryBean patientToUpdate = new PatientHistoryBean();
+        PatientHistoryBean patientHistory = new PatientHistoryBean();
+        List<PatientHistoryBean> uniquePatientList = new ArrayList<>();
+
+        given(microserviceNotesProxy.updateNoteById(noteId, patientToUpdate)).willReturn(patientHistory);
+        given(microserviceNotesProxy.patientList()).willReturn(uniquePatientList);
+
+        mockMvc.perform(post("/PatHistory/update/{id}", noteId)
+                        .flashAttr("patientToUpdate", patientToUpdate))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    public void testUpdatePatientHistory_FeignException() throws Exception {
+        long noteId = 1;
+        PatientHistoryBean patientToUpdate = new PatientHistoryBean();
+
+        given(microserviceNotesProxy.updateNoteById(noteId, patientToUpdate)).willThrow(FeignException.InternalServerError.class);
+
+        mockMvc.perform(post("/PatHistory/update/{id}", noteId)
+                        .flashAttr("patientToUpdate", patientToUpdate))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    public void testDeletePatient() throws Exception {
+        long patientId = 1;
+        List<PatientBean> uniquePatientList = new ArrayList<>();
+
+        mockMvc.perform(post("/Patient/delete/{id}", patientId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/PatientList"));
+    }
+
+    @Test
+    public void testDeletePatientHistory_Success() throws Exception {
+        long noteId = 1;
+        List<PatientHistoryBean> uniquePatientList = new ArrayList<>();
+
+        mockMvc.perform(post("/PatHistory/delete/{id}", noteId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    public void testPatientList() throws Exception {
+        List<PatientBean> patients = new ArrayList<>();
+
+        given(microservicePatientProxy.patientList()).willReturn(patients);
+
+        mockMvc.perform(get("/PatientList"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("Home"));
+    }
+
+
+    @Test
+    public void testGetPatientDetails() throws Exception {
+        long patientId = 1;
+        String assessmentResult = "Some assessment result";
+        List<PatientHistoryBean> patientHistoryList = new ArrayList<>();
+
+        given(microserviceNotesProxy.getListNotesByPatId(patientId)).willReturn(patientHistoryList);
+
+        given(assessmentProxy.getAssessmentById(patientId)).willReturn(assessmentResult);
+
+        mockMvc.perform(get("/PatHistory/patid/{patId}", patientId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("PatientDetails"))
+                .andExpect(model().attributeExists("patientHistoryList"))
+                .andExpect(model().attribute("patientHistoryList", patientHistoryList))
+                .andExpect(model().attributeExists("assessmentResult"))
+                .andExpect(model().attribute("assessmentResult", assessmentResult));
+
+    }
+
+    @Test
+    public void testGetSheetPatient_Success() throws Exception {
+        List<PatientHistoryBean> patientList = new ArrayList<>();
+        List<PatientHistoryBean> filteredList = new ArrayList<>();
+
+        given(microserviceNotesProxy.patientList()).willReturn(patientList);
+
+        mockMvc.perform(get("/PatientHistoryList/Filter"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("Assess"))
+                .andExpect(model().attributeExists("filteredList"))
+                .andExpect(model().attribute("filteredList", filteredList));
+
+    }
+}
+
+
+
+
