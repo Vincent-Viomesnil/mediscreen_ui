@@ -5,12 +5,16 @@
     <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
 </head>
 <body>
+
 <div th:if="${success}" class="alert alert-success">
-    <strong>Patient successfully added!</strong>
+    <strong>Success:</strong> Patient successfully added/updated.
 </div>
+
 <div th:if="${error}" class="alert alert-danger">
-    <strong>Operation failed</strong>
+    <strong>Error:</strong> Failed to add/update patient.
 </div>
+
+
 <div class="container">
     <h1>Mediscreen - Home/All Patients</h1>
     <div class="row">

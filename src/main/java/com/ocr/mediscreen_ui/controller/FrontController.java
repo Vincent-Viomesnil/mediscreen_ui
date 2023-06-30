@@ -179,6 +179,7 @@ public class FrontController {
 
         model.addAttribute("uniquePatientList", uniquePatientList);
         model.addAttribute("patient", patient);
+
         return "Update";
     }
 
@@ -192,6 +193,8 @@ public class FrontController {
             List<PatientBean> uniquePatientList = microservicePatientProxy.patientList();
 
             model.addAttribute("uniquePatientList", uniquePatientList);
+            redir.addFlashAttribute("success", "Patient successfully updated");
+
             return "redirect:/PatientList";
         } catch (FeignException.BadRequest e) {
             redir.addFlashAttribute("error", "Bad request during operation");
@@ -218,6 +221,8 @@ public class FrontController {
             List<PatientHistoryBean> uniquePatientList = microserviceNotesProxy.patientList();
 
             model.addAttribute("uniquePatientList", uniquePatientList);
+            redir.addFlashAttribute("success", "Note successfully updated");
+
             return "redirect:/";
         } catch (FeignException e) {
             redir.addFlashAttribute("error", e.status() + " during operation");
