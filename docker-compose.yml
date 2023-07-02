@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   dbpatient:
+    image: dbpatient
     container_name: dbpatient
     build: ../mediscreen/database
     ports:
@@ -9,6 +10,7 @@ services:
     restart: always
 
   mongodb:
+    image: mongodb
     container_name: mongodb
     build: ../mediscreen_mdb/database
     ports:
@@ -16,6 +18,7 @@ services:
     restart: always
 
   patient:
+    image: patient
     container_name: patient
     build: ../mediscreen
     environment:
@@ -27,6 +30,7 @@ services:
     restart: always
 
   patientnotes:
+    image: patientnotes
     container_name: patientnotes
     build: ../mediscreen_mdb
     environment:
@@ -38,6 +42,7 @@ services:
     restart: always
 
   patientassess:
+    image: patientassess
     container_name: patientassess
     build: ../mediscreen_assess
     environment:
@@ -51,6 +56,7 @@ services:
     restart: always
 
   patientui:
+    image: patientui
     container_name: patientui
     build: ../mediscreen_ui
     environment:

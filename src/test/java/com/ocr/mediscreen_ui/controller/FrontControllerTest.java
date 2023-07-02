@@ -8,20 +8,17 @@ import com.ocr.mediscreen_ui.proxies.MicroserviceNotesProxy;
 import com.ocr.mediscreen_ui.proxies.MicroservicePatientProxy;
 import feign.FeignException;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -187,7 +184,7 @@ public class FrontControllerTest {
     }
 
     @Test
-    public void testUpdatePatient_Success() throws Exception {
+    public void testUpdatePatient() throws Exception {
         long patientId = 1;
         PatientBean patientToUpdate = new PatientBean();
         PatientBean patientUpdated = new PatientBean();
@@ -269,7 +266,7 @@ public class FrontControllerTest {
     }
 
     @Test
-    public void testDeletePatientHistory_Success() throws Exception {
+    public void testDeletePatientHistory() throws Exception {
         long noteId = 1;
         List<PatientHistoryBean> uniquePatientList = new ArrayList<>();
 
@@ -311,7 +308,7 @@ public class FrontControllerTest {
     }
 
     @Test
-    public void testGetSheetPatient_Success() throws Exception {
+    public void testGetSheetPatient() throws Exception {
         List<PatientHistoryBean> patientList = new ArrayList<>();
         List<PatientHistoryBean> filteredList = new ArrayList<>();
 
