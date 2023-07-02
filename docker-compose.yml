@@ -4,7 +4,7 @@ services:
   dbpatient:
     image: dbpatient
     container_name: dbpatient
-    build: ../mediscreen/database
+    build: ../mediscreen_patient/database
     ports:
       - "13306:3306"
     restart: always
@@ -20,7 +20,7 @@ services:
   patient:
     image: patient
     container_name: patient
-    build: ../mediscreen
+    build: ../mediscreen_patient
     environment:
       spring.datasource.url: "jdbc:mysql://dbpatient:3306/bdd_mediscreen"
     ports:
