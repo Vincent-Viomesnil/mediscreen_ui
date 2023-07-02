@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Mediscreen</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
+
+</head>
+<body>
+
+
+<div th:if="${success}" th:class="${alert}">
+    <div class="alert alert-success">
+        <strong>Note succcessfully Added</strong>
+    </div>
+</div>
+
+<div th:if="${error}" th:class="${alert}">
+    <div class="alert alert-danger">
+        <strong>Operation failed</strong>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Mediscreen</h1>
+    <h2>Add New Note</h2>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <form action="#" th:action="@{/PatHistory/validate}" th:object="${patientHistory}" method="post" class="form-horizontal" style="width: 100%">
+
+                    <div class="form-group">
+                        <label for="patId">Patient ID</label>
+                        <select id="patId" name="patId" class="form-control" onchange="updateLastName()">
+                            <option value="">Select Patient ID</option>
+                            <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.id + ' - ' + patient.lastname}" th:data-lastname="${patient.lastname}" th:data-firstname="${patient.firstname}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastname">Lastname</label>
+                        <input type="text" id="lastname" name="lastname" class="form-control" readonly th:value="${patientBean.firstname}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <input type="text" id="notes" name="notes" class="form-control" placeholder="Enter notes">
+                    </div>
+
+                    <div class="form-group">
+                        <a class="btn btn-danger btn-sm" href="/">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Add Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+<script>
+    function updateLastName() {
+        var patId = document.getElementById("patId").value;
+        var lastnameField = document.getElementById("lastname");
+        var selectedOption = document.querySelector("#patId option:checked");
+        var firstname = selectedOption.getAttribute("data-firstname");
+        var lastname = selectedOption.getAttribute("data-lastname");
+
+        if (patId === "") {
+            lastnameField.value = "";
+            lastnameField.readOnly = true;
+        } else {
+            lastnameField.value = firstname + " " + lastname;
+            lastnameField.readOnly = true;
+        }
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Mediscreen</title>
+
+
+
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
+
+
+
+</head>
+
+<body>
+
+
+<div th:if="${success}" class="alert alert-success">
+    <strong>Success:</strong> Patient successfully updated.
+</div>
+
+<div th:if="${error}" class="alert alert-danger">
+    <strong>Error:</strong> Failed to update patient.
+</div>
+
+
+
+<div class="container">
+
+
+
+
+    <h1>Mediscreen</h1>
+    <h2>Update Patient </h2>
+
+
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12">
+                <div class="card-body justify-content-center">
+
+                    <form action='#' th:action="@{|/Patient/update/${id}|}"  th:object="${patient}"  method="post" class="form-horizontal" style="width: 100%">
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label">Firstname</label>
+                            <div class="col-sm-10">
+                                <input type="text" th:field="*{firstname}" id="firstname" required maxlength="50" placeholder="Firstname" class="col-4">
+                                <small class="text-danger" th:errors="*{firstname}"></small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname" class="col-sm-2 control-label">Lastname</label>
+                            <div class="col-sm-10">
+                                <input type="text" th:field="*{lastname}" id="lastname" required maxlength="50" placeholder="Lastname" class="col-4">
+                                <small class="text-danger" th:errors="*{lastname}"></small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthdate" class="col-sm-2 control-label">Birthdate</label>
+                            <div class="col-sm-10">
+                                <input type="date" th:field="*{birthdate}" id="birthdate" required placeholder="Birthdate" class="col-4">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender" class="col-sm-2 control-label">Gender</label>
+                            <div class="col-sm-10">
+                                <input type="text" th:field="*{gender}" id="gender" required pattern="[MF]" title="Gender must be either 'M' or 'F'" placeholder="Gender" class="col-4">
+                                <small class="text-danger" th:errors="*{gender}"></small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="col-sm-2 control-label">Address</label>
+                            <div class="col-sm-10">
+                                <input type="text" th:field="*{address}" id="address" required maxlength="255" placeholder="Address" class="col-4">
+                                <small class="text-danger" th:errors="*{address}"></small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phonenumber" class="col-sm-2 control-label">PhoneNumber</label>
+                            <div class="col-sm-10">
+                                <input type="text" th:field="*{phonenumber}" id="phonenumber" required maxlength="50" placeholder="Phonenumber" class="col-4">
+                                <small class="text-danger" th:errors="*{phonenumber}"></small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <a class="btn btn-danger btn-sm" href="/PatientList">Cancel</a>
+                                <input class="btn btn-primary btn-sm" type="submit" value="Update Patient">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    <script type="text/javascript" src="webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+
+
+</div>
+</body>
+
+</html>

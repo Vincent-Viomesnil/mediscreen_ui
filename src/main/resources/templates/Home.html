@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mediscreen</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" />
+</head>
+<body>
+
+<div th:if="${success}" class="alert alert-success">
+    <strong>Success:</strong> Patient successfully added/updated.
+</div>
+
+<div th:if="${error}" class="alert alert-danger">
+    <strong>Error:</strong> Failed to add/update patient.
+</div>
+
+
+<div class="container">
+    <h1>Mediscreen - Home/All Patients</h1>
+    <div class="row">
+        <a href="/" class="btn btn-primary btn-sm">Home </a> |
+        <a href="/Patient/add" class="btn btn-primary btn-sm">Add New Patient</a>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Birthdate</th>
+                <th>Gender</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="patient : ${uniquePatientList}">
+                <td th:text="${patient.id}"></td>
+                <td th:text="${patient.firstname}"></td>
+                <td th:text="${patient.lastname}"></td>
+                <td th:text="${patient.birthdate}"></td>
+                <td th:text="${patient.gender}"></td>
+                <td th:text="${patient.address}"></td>
+                <td th:text="${patient.phonenumber}"></td>
+                <td style="width: 15%" class="text-center">
+                    <a th:href="@{/Patient/update/{id}(id=${patient.id})}" class="btn btn-primary btn-sm">Update</a>
+                    <form th:action="@{/Patient/delete/{id}(id=${patient.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this patient?')">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+</body>
+</html>
